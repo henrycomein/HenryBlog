@@ -1,0 +1,28 @@
+.treegrid-indent {width:16px; height: 16px; display: inline-block; position: relative;}
+.treegrid-expander {width:16px; height: 16px; display: inline-block; position: relative; cursor: pointer;}
+.treegrid-expander-expanded{background-image: url(../img/collapse.png); }
+.treegrid-expander-collapsed{background-image: url(../img/expand.png);}
+.table-bordered>thead {
+    border-bottom: none;
+    background: #F2F2F2;
+    background-image: -webkit-linear-gradient(top,#f8f8f8 0,#ececec 100%);
+    background-image: -o-linear-gradient(top,#f8f8f8 0,#ececec 100%);
+    background-image: linear-gradient(to bottom,#f8f8f8 0,#ececec 100%);
+    background-repeat: repeat-x;
+    filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#fff8f8f8', endColorstr='#ffececec', GradientType=0);
+    padding: 0!important;
+    border-left: 1px solid #E1E1E1!important;
+}
+.treegrid-table > tr:hover {
+    border-color:#EFF4F7;
+}
+.table-bordered>thead>tr>th, .table-bordered>tbody>tr>th, .table-bordered>tfoot>tr>th, .table-bordered>thead>tr>td, .table-bordered>tbody>tr>td, .table-bordered>tfoot>tr>td {
+border: 1px solid #ddd;
+}
+.treegrid-table>thead>tr>th, .treegrid-table>tbody>tr>th, .treegrid-table>tfoot>tr>th, .treegrid-table>thead>tr>td, .treegrid-table>tbody>tr>td, .treegrid-table>tfoot>tr>td {
+padding: 8px;
+line-height: 1.42857143;
+vertical-align: top;
+border-bottom: 1px solid #ddd;
+border-top:0px;
+}

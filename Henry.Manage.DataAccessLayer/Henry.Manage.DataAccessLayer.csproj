@@ -1,0 +1,85 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProjectGuid>{B2804B79-116A-452E-98B5-0AD74F5408AD}</ProjectGuid>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>Henry.Manage.DataAccessLayer</RootNamespace>
+    <AssemblyName>Henry.Manage.DataAccessLayer</AssemblyName>
+    <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
+    <FileAlignment>512</FileAlignment>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="System" />
+    <Reference Include="System.configuration" />
+    <Reference Include="System.Core" />
+    <Reference Include="System.Xml.Linq" />
+    <Reference Include="System.Data.DataSetExtensions" />
+    <Reference Include="Microsoft.CSharp" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Xml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="AboutMeDAL.cs" />
+    <Compile Include="LifeEventCategoryDAL.cs" />
+    <Compile Include="LifeEventDAL.cs" />
+    <Compile Include="ActivityPhotoRelationDAL.cs" />
+    <Compile Include="ArticleCategoryDAL.cs" />
+    <Compile Include="ArticleDAL.cs" />
+    <Compile Include="PhotoCategoryDAL.cs" />
+    <Compile Include="PhotoDAL.cs" />
+    <Compile Include="SystemSettingDAL.cs" />
+    <Compile Include="TagDAL.cs" />
+    <Compile Include="ArticleVisitorDAL.cs" />
+    <Compile Include="MenusDAL.cs" />
+    <Compile Include="BackgroundImageDAL.cs" />
+    <Compile Include="LoginLogDAL.cs" />
+    <Compile Include="MessageDAL.cs" />
+    <Compile Include="MySqlHelper.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="RoleDAL.cs" />
+    <Compile Include="RoleMenusRelationDAL.cs" />
+    <Compile Include="UserDAL.cs" />
+    <Compile Include="UserDetailDAL.cs" />
+    <Compile Include="UserRolesRelationDAL.cs" />
+    <Compile Include="WebLogsDAL.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\Common\Henry.Common\Henry.Common.csproj">
+      <Project>{1b12de59-136f-479b-96e3-0052e242943d}</Project>
+      <Name>Henry.Common</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Entity\Henry.Entity\Henry.Entity.csproj">
+      <Project>{9d17bb56-e301-4dbc-8aed-5adff40b768d}</Project>
+      <Name>Henry.Entity</Name>
+    </ProjectReference>
+  </ItemGroup>
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
+       Other similar extension points exist, see Microsoft.Common.targets.
+  <Target Name="BeforeBuild">
+  </Target>
+  <Target Name="AfterBuild">
+  </Target>
+  -->
+</Project>

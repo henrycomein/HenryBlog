@@ -1,0 +1,137 @@
+﻿@{
+    ViewBag.Title = "Article";
+    Layout = "~/Views/Shared/_Child.cshtml";
+    var displayInfo = Model;
+    if (displayInfo == null || displayInfo.A_ID==0)
+    {
+        displayInfo = new Henry.Entity.Article() { A_ID = 0, A_Status = 1, A_IsTop = 0,A_Title="",A_CategoryName="", A_Content = "", A_Sort = 99999 };
+    }
+}
+@model Henry.Entity.Article
+@section css{
+    <link href="~/Scripts/editor/css/froala_editor.min.css" rel="stylesheet" />
+    <link href="~/Scripts/editor/css/froala_style.min.css" rel="stylesheet" />
+    <link href="~/Scripts/iCheck/skins/flat/red.css" rel="stylesheet" />
+}
+@section scripts{
+     
+    <script src="~/Scripts/editor/js/froala_editor.min.js"></script>
+    <!--[if lt IE 9]>
+        <script src="~/Scripts/editor/js/froala_editor_ie8.min.js"></script>
+    <![endif]-->
+   <script src="~/Scripts/editor/js/langs/zh_cn.js"></script>
+    
+    <script src="~/Scripts/iCheck/icheck.min.js"></script>
+    <script src="~/Scripts/jquery.blockUI.js"></script>
+    <script src="~/Scripts/lhgdialog/lhgdialogPlus.js"></script>
+
+    <script type="text/javascript">
+        $(function () {
+            $("#article-content").editable({
+                inlineMode: false,
+                width: 600,
+                theme: 'gray',
+                height: '200px', //高度
+                imageUploadURL: '@Url.Action("Index","ImageUpload")',
+            });
+            $('.article-cbox').iCheck({
+                checkboxClass: 'icheckbox_flat-red top6px',
+                radioClass: 'iradio_flat-red'
+            });
+            $('#article-status').iCheck('@(displayInfo.A_Status==1?"check":"uncheck")');
+            $('#article-top').iCheck('@(displayInfo.A_IsTop==1?"check":"uncheck")');
+
+            $("#btn-submit").click(function () {
+                var categoryid=$("#categoryname").attr("data-val")
+                if (categoryid.length == 0 || categoryid == "0")
+                {
+                    winAlert($("#categoryname").attr("data-required-msg"));
+                    return false;
+                }
+                if (tools.valicate()) {
+                    var postContent = {};
+                    postContent.A_ID = '@displayInfo.A_ID';
+                    postContent.A_Title = $("#article-title").val();
+                    postContent.A_Content = $("#article-content").editable('getHTML', true, true);
+                    postContent.A_CategoryID = categoryid;
+                    postContent.A_Sort = $("#article-sort").val();
+                    postContent.A_IsTop = $("#article-top").prop("checked") ? 1 : 0;
+                    postContent.A_Status = $("#article-status").prop("checked") ? 1 : 0;
+                    tools.postData($("#article-data").attr("action"), postContent, function (data) {
+                        if (data.success) {
+                            winAlert(data.message, true, true, "parent", 3);
+                        }
+                        else {
+                            winAlert(data.message);
+                        }
+                    }, "#article-data")
+                }
+                return false;
+            });
+        });
+        function setCategory(fullcategory,id) {
+            $("#categoryname").attr("data-val", id).html(fullcategory.join(' <i class="fa fa-caret-right"></i> '));
+        }
+    </script>
+}
+<div class="col-xs-12 margint20">
+        <form class="form-horizontal" id="article-data" action="{dns}api/article/update" method="post">
+            <div class="form-group">
+                <label class="col-sm-2 control-label no-padding-right" for="article-title"> 文章标题 </label>
+                <div class="col-sm-10">
+                    <input type="text" id="article-title" placeholder="请输入文章标题" class="col-sm-6 required" data-required-msg="请输入文章标题！" value="@displayInfo.A_Title">
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="col-sm-2 control-label no-padding-right" for="categoryname"> 类别 </label>
+                <div class="col-sm-10 top6px">
+                    <span id="categoryname" data-valicate-field="data-val" data-val="@displayInfo.A_ID" data-required-msg="请选择文章类别！" class="required">@(Html.Raw(displayInfo.A_CategoryName.Replace(",", " <i class='fa fa-caret-right'></i> ")))</span>
+                    <a href="javascript:;" data-rel="popup" data-title="选择类别" data-width="350px" data-content="url:{dns}Basic/CategorySelect">
+                        <i class="fa fa-pencil-square-o bigger-150 top3px green "></i>
+                        重选
+                    </a>
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="col-sm-2 control-label no-padding-right" for="form-field-1">文章内容 </label>
+                <div class="col-sm-10">
+                    <textarea id="article-content" placeholder="文章内容" class="col-sm-10" >@displayInfo.A_Content</textarea>
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="col-sm-2 control-label no-padding-right" for="article-sort">排序 </label>
+                <div class="col-sm-10">
+                    <input type="text" id="article-sort" placeholder="请输入显示顺序" data-required-msg="请输入排序！" class="col-sm-1 required" value="@displayInfo.A_Sort" />
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="col-sm-2 control-label no-padding-right" for="article-top"> 置顶 </label>
+                <div class="col-sm-1">
+                    <input name="article-top" class="article-cbox" id="article-top" type="checkbox" />
+                </div>
+                <label class="col-sm-2 control-label no-padding-right" for="form-field-1"> 有效 </label>
+                <div class="col-sm-7 ">
+                    <input name="article-status" class="article-cbox " id="article-status" type="checkbox" />
+                </div>
+            </div>
+           
+        </form>
+    </div>
+<div class="clearfix form-actions fixed-bottom col-xs-12 ">
+    <div class=" col-md-12" style="text-align: center;">
+        <button class="btn btn-info" type="button" id="btn-submit">
+            <i class="ace-icon fa fa-check bigger-110"></i>
+            @if (displayInfo.A_ID > 0)
+            {
+                <text>保存</text>
+            }
+            else
+            { <text>新增</text>}
+        </button>
+        &nbsp; &nbsp; &nbsp;
+        <button class="btn closeDialog" type="button">
+            <i class="ace-icon fa fa-undo bigger-110"></i>
+            关闭
+        </button>
+    </div>
+</div>

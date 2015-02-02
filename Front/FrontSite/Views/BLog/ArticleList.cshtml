@@ -1,0 +1,73 @@
+﻿@{
+    ViewBag.Title = "ArticleList";
+}
+@model FrontSite.Models.Chapter
+
+<div class="newcontainer" id="page_course_learn">
+    <div class="course_nav clearfix">
+        <div class="blog-title mgbottom10" id="page_header">
+            <a href="@Request.UrlReferrer" class="back-btn">&lt;</a>
+            <h1>@Model.CategoryInfo.AC_Name</h1>
+        </div>
+        <div class="main-container">
+            <div class="article-list-sidebar">
+                <div class="article-list-sidebar-type">
+                    <ul class="article-info">
+                        <li><a href="/view/141" class="picture">
+                            <img src="http://img.mukewang.com/53c72b3a00014fe906000338.jpg" width="280" height="160"></a></li>
+                        <li class="bg">
+                            <div class="info_num">
+                                <span class="info_title">已有&nbsp;</span><i>@Model.CategoryInfo.TotalReadTimes</i><span class="info_title">&nbsp;枚童鞋阅读</span>
+                            </div>
+
+                        </li>
+                        <li class="bg">
+                            <div class="info_num"><i class="ft-adjust">系列简介</i></div>
+                            <div class="info_title">
+                                @Model.CategoryInfo.AC_Description
+                            </div>
+                        </li>
+                    </ul>
+                </div>
+
+            </div>
+            <div class="article-list-content">
+                <div style="margin-top: 0px;">
+                    <div class="article-list-area">
+                        <ul class="blog-menu clearfix">
+                            <li><a class="ui-tabs-active" id="learnOn" href="javascript;"><span>章节</span></a></li>
+                        </ul>
+                        @if (Model.ArticleItems.Count > 0)
+                        {
+                            <div class="article-chapter-list">
+                                @foreach (var item in Model.ArticleItems)
+                                {
+                                    <div class="article-learnchapter  article-learnchapter-active ">
+                                        <a href="/blog/article/view/@(item.A_ID).html">
+                                            <h3>
+                                                <strong><i class="hasOpenOn"></i>@item.A_Title</strong>
+                                            </h3>
+                                        </a>
+                                    </div>
+                                }
+                           
+                            </div>
+                         }
+                        else
+                        {
+                            <div class="no-data">
+                                <img src="~/Images/dot_nodata.png" />
+                            </div>
+                        }
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+
+    <div class="sidebar" style="display: none;">
+    </div>
+    <br class="clear">
+</div>

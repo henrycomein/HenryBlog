@@ -1,0 +1,11 @@
+﻿@{
+    Layout = null;
+}
+@model IEnumerable<Henry.Entity.ArticleCategory>
+@{
+    foreach (var m in Model)
+    { 
+        <text><li><a href="~/Blog/@(m.AC_Code).html">@m.AC_Name</a></li></text>
+    }
+}
+

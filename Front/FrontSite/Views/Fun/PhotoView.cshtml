@@ -1,0 +1,42 @@
+﻿@{
+    ViewBag.Title = "PhotoView";
+    var photoBasicUrl=Henry.Common.SettingHelper.PhotoVisitePath();
+    var valid = (int)ViewBag.ValidRequest == 1;
+}
+@section css{
+
+    <link href="~/Scripts/lightbox/css/lightbox.css" rel="stylesheet" />
+    @if(!valid){
+        <link href="~/Scripts/jBox/Source/jBox.css" rel="stylesheet" />
+    }
+}
+@section scripts{
+
+    <script src="~/Scripts/lightbox/js/lightbox.min.js"></script>
+    @if(!valid){
+        <script src="~/Scripts/jBox/Source/jBox.min.js"></script>
+        <script type="text/javascript">
+            $(function () {
+                tools.initPasswordModel('{dns}valicate/checkphotopassword', { id: '@ViewBag.CategoryID' }).open();
+            });
+
+        </script>
+    }
+}
+@model List<Henry.Entity.Photo>
+           }
+<div class="main-container">
+    <div class="blog-content photo-content">
+        <div class="photo-tools">
+            <h2>相册--@ViewBag.CategoryName<span><strong >&nbsp;(@Model.Count)&nbsp;</strong></span></h2>
+        </div>
+        <div class="photo-list" style="margin-top: 0px;">
+            @foreach (var i in Model)
+            {
+                <a href="@(string.Concat(photoBasicUrl,"/",i.P_FileName))" data-lightbox="roadtrip" data-title="@i.P_Desc" class="photoLink">
+                    <img  src="@(string.Concat(photoBasicUrl,"/",i.P_FileName))" alt="" />
+                </a>
+            }
+        </div>
+    </div>
+</div>

@@ -1,0 +1,176 @@
+﻿@{
+    ViewBag.Title = "Category";
+    Layout="~/Views/Shared/_Child.cshtml";
+    var displayInfo = Model;
+    var modelImage = string.Empty;
+    var tagString = string.Empty;
+    var attrb = string.Empty;
+    if (displayInfo == null || displayInfo.P_ID == 0)
+    {
+        displayInfo = new Henry.Entity.Photo() { P_ID = 0, P_Status = 1, P_CategoryID = 0,P_Desc = "", P_FileName = "" };
+        attrb="class=\"ace-file-container ace-file-container-fixed required\"  data-title=\"点击上传\"";
+    }
+    else{
+        modelImage = string.Format("<img class=\"middle\" id=\"photo-img\" data=\"{0}\" style=\"max-height: 150px;\" src=\"{1}{0}\" />", displayInfo.P_FileName, Henry.Common.SettingHelper.PhotoVisitePath());
+        tagString = string.Format("<span id=\"photo-tag\" class=\"label label-lg label-success label-white middle marginr10px\" data-valicate-field=\"data-val\" data-val=\"{0}\" >{1}</span>", displayInfo.P_TagID, displayInfo.P_TagName);
+        attrb="class=\"ace-file-container ace-file-container-fixed ace-file-container-nocontent required \"" ;
+    }
+}
+@model Henry.Entity.Photo
+@section css{
+    <link href="~/Scripts/iCheck/skins/flat/red.css" rel="stylesheet" />
+}
+@section scripts{
+
+
+    <script src="~/Scripts/iCheck/icheck.min.js"></script>
+    <script src="~/Scripts/jquery.blockUI.js"></script>
+    <script src="~/Scripts/plupload/plupload.full.min.js"></script>
+    <script src="~/Scripts/lhgdialog/lhgdialogPlus.js"></script>
+
+    <script type="text/javascript">
+        $(function () {
+            $('#photo-status').iCheck({
+                checkboxClass: 'icheckbox_flat-red top6px',
+                radioClass: 'iradio_flat-red'
+            }).iCheck('@(displayInfo.P_Status == 1 ? "check" : "uncheck")');
+
+            $("#btn-submit").click(function () {
+                if (tools.valicate()) {
+                    var postContent = {};
+                    postContent.P_ID = '@displayInfo.P_ID';
+                    postContent.P_CategoryID = $("#photo-category").val();
+                    postContent.P_Desc = $("#photo-desc").val();
+                    postContent.P_FileName = $("#uploadspan").attr("data-val");
+                    postContent.P_TagID = $("#photo-tag").attr("data-val");
+                    postContent.P_Status = $("#photo-status").prop("checked") ? 1 : 0;
+                    tools.postData($("#photo-data").attr("action"), postContent, function (data) {
+                        if (data.success) {
+                            winAlert(data.message, true, true, "parent", 3);
+                        }
+                        else {
+                            winAlert(data.message);
+                        }
+                    }, "#photo-data")
+                }
+                return false;
+            });
+
+            var uploader = new plupload.Uploader({
+                browse_button: 'uploadPanel', // this can be an id of a DOM element or the DOM element itself
+                url: ['@Url.Action("Index", "ImageUpload")', '?rnd=',new Date().getTime(),'&photo=1'].join(''),
+                runtimes: "html5,flash,html4",
+                flash_swf_url: '@Url.Content("~/Scripts/plupload/Moxie.swf")',
+                max_file_size: '4mb',
+                filters: { mime_types: [{ title: "Image files", extensions: "jpg,jpeg,gif,png" }] }
+            });
+            uploader.init();
+            uploader.bind('FilesAdded', function (up, files) {
+                if (!$("#uploadspan").hasClass("ace-file-container-nocontent"))
+                {
+                    $("#uploadspan").addClass("ace-file-container-nocontent").removeAttr("data-title");
+                }
+                if ($("#photo-img").length > 0) {
+                    $("#photo-img").attr('src', '@Url.Content("~/Images/loading.gif")');
+                }
+                else {
+                    var imgDom = '<img class="middle" id="photo-img" data="" style="max-height: 150px;" src="@Url.Content("~/Images/loading.gif")" />';
+                    $(imgDom).insertBefore("#defaultIcon");
+                }
+                uploader.start();
+            });
+            uploader.bind('Error', function (up, err) {
+                alert("uploaded error!");
+            });
+            uploader.bind("FileUploaded", function (up, file, res) {
+                var result = $.parseJSON(res.response);
+                if (result.success) {
+                    console.log(result.addtionnalData);
+                    $("#photo-img").attr({ "src": result.url, "data": result.addtionnalData }).show()
+                    $("#uploadspan").attr("data-val", result.addtionnalData);
+                }
+                else {
+                    $("#photo-img").attr("src", "").hide();
+                    alert("请上传图片！");
+                }
+            });
+        });
+        function setTag(tagname, id) {
+            $("#btn-selecttag").attr("data-content", 'url:{dns}basic/tagselect/' + id);
+            if ($("#photo-tag").length > 0) {
+                $("#photo-tag").attr("data-val", id).html(tagname);;
+            }
+            else {
+                var tagDom = '<span id="photo-tag" class="label label-lg label-success label-white middle marginr10px" data-valicate-field="data-val" data-val="' + id + '" >' + tagname + '</span>';
+                $(tagDom).insertBefore("#btn-selecttag");
+            }
+        }
+    </script>
+}
+<div class="col-xs-12 margint20">
+    <form class="form-horizontal" id="photo-data" action="{dns}api/photo/update" method="post">
+         <div class="form-group">
+            <label class="col-sm-2 control-label no-padding-right" for="photo-category">图片类别 </label>
+            <div class="col-sm-10">
+                @Html.DropDownList("photo-category", (List<SelectListItem>)ViewBag.DropDownList, "--请选择--", new { @class="required",data_required_msg="请选择图片类别!"})
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="col-sm-2 control-label no-padding-right"><i class="fa fa-tag bigger-150 top3px green"></i>&nbsp;标签 </label>
+            <div class="col-sm-10 top6px">
+                @Html.Raw(tagString)
+                <button class="btn btn-warning badge" id="btn-selecttag" data-rel="popup" data-title="选择标签" data-width="300px" data-height="150px" data-content="url:{dns}basic/tagselect/@displayInfo.P_TagID">
+					<i class="ace-icon fa fa-hand-o-right bigger-110"></i>
+					<span class="bigger-110 no-text-shadow">选择</span>
+				</button>
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="col-sm-2 control-label no-padding-right" for="photo-name">图片预览 </label>
+            <div class="col-sm-10">
+                <div class="editable-input editable-image" id="uploadPanel" >
+                    <label class="ace-file-input ace-file-multiple" style="width: 263px;">
+                        <span id="uploadspan" @Html.Raw(attrb) data-valicate-field="data-val" data-val="@displayInfo.P_FileName" data-required-msg="请上传图片!">
+                            <span class="ace-file-name center" data-title="No File ...">
+                                @Html.Raw(modelImage)
+                                <i class="pink ace-icon fa fa-picture-o" id="defaultIcon" style="line-height:140px;font-size:140px"></i>
+                            </span>
+                        </span>
+                    </label>
+                </div>
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="col-sm-2 control-label no-padding-right" for="photo-desc">图片描述 </label>
+            <div class="col-sm-10">
+                <textarea id="photo-desc" placeholder="图片描述" class="col-sm-10">@displayInfo.P_Desc</textarea>
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="col-sm-2 control-label no-padding-right" for="photo-status">有效 </label>
+            <div class="col-sm-10 ">
+                <input  id="photo-status" type="checkbox" />
+            </div>
+
+        </div>
+    </form>
+</div>
+<div class="clearfix form-actions fixed-bottom col-xs-12 ">
+    <div class=" col-md-12" style="text-align: center;">
+        <button class="btn btn-info" type="button" id="btn-submit">
+            <i class="ace-icon fa fa-check bigger-110"></i>
+            @if (displayInfo.P_ID > 0)
+            {
+                <text>保存</text>
+            }
+            else
+            { <text>新增</text>}
+        </button>
+        &nbsp; &nbsp; &nbsp;
+        <button class="btn closeDialog" type="button">
+            <i class="ace-icon fa fa-undo bigger-110"></i>
+            关闭
+        </button>
+    </div>
+</div>
+

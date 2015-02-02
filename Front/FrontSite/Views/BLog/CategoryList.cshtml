@@ -1,0 +1,73 @@
+﻿@model List<Henry.Entity.ArticleCategory>
+
+@{
+    var baseCategory = Model.First(i => i.LevelNum == 0);
+    var parentCategory = Model.Where(i => i.LevelNum == 1);    
+}
+@section scripts{
+    <script src="~/Scripts/getarticle.js" type="text/javascript"></script>
+    <script type="text/javascript">
+        $(function () {
+            getArticleEvent.getarticles();
+            var target = $(window);
+            $(target).scroll(function (event) {
+                if ($(target).scrollTop() + 10 >= $(document).height() - $(target).height())
+                {
+                    if ($("#category-content").attr("data-load-complete") == "0") {
+                        getArticleEvent.getarticles();
+                    }
+                }
+            });
+            $(".blog-sidebar-type ul li.blog-category-more").hover(function () {
+                $(this).addClass("hover");
+                $(this).find(".blog-category-sort").show();
+            }, function () {
+                $(this).removeClass("hover");
+                $(this).find(".blog-category-sort").hide();
+            })
+            // code for fade in element by element
+        });
+    </script>
+}
+<div class="main-container">
+    <div class="blog-sidebar">
+        <div class="blog-sidebar-type">
+            <ul>
+                <li class="blog-category curr"><a class="blog-category-link" href="/@(baseCategory.AC_Code).html" >全部</a></li>
+                @foreach(var p in parentCategory)
+                {
+                <li class="blog-category blog-category-more">
+                    <a class="blog-category-link" href="/blog/category/list/@baseCategory.AC_Code/@p.AC_Code" >@p.AC_Name<i></i></a>
+                    <div class="blog-category-sort">
+                        <div class="blog-category-sort-bg"></div>
+                        <ul>
+                            @foreach(var c in Model.Where(i=>i.AC_ParentID==p.AC_ID))
+                            {
+                                <li><a href="/blog/category/list/@baseCategory.AC_Code/@c.AC_Code">@c.AC_Name</a></li>
+                            }
+                        </ul>
+                    </div>
+                </li>
+                }
+            </ul>
+            <div class="dot-sidebar-curr" style="top:0px"></div>
+        </div>
+
+    </div>
+    <div class="blog-content">
+        <div class="blog-tools">
+            <h2>全部<span><strong id="article-total"></strong></span></h2>
+           <!-- <a href="javascript:void(0)" class="blog-tools-learn js-tool-learn" data-checked="0">不显示已学课程</a>
+            <ul class="js-tool-sort">
+                <li><a class="curr" data-id="last" href="javascript:void(0)">最新上线</a></li>
+                <li><a href="javascript:void(0)" data-id="pop">最受欢迎</a></li>
+            </ul> 
+            <div class="dot-tool-curr"></div>-->
+        </div>
+        <div class="blog-list" style="margin-top: 0px;">
+            <div class="js-blog-list">
+                <ul id="category-content" data-load-complete="0"></ul>
+            </div>
+        </div>
+    </div>
+</div>

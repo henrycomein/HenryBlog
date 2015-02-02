@@ -1,0 +1,121 @@
+﻿@{
+    ViewBag.Title = "PhotoCategory";
+    Layout = "~/Views/Shared/_Child.cshtml";
+    var displayInfo = Model;
+    var hideCss = "display:none;";
+    if (displayInfo == null || displayInfo.PC_ID == 0)
+    {
+        displayInfo = new Henry.Entity.PhotoCategory() { PC_ID = 0, PC_Status = 1, PC_Show = 1, PC_Name = "", PC_Desc = "", PC_Sort = 99999 };
+    }
+    else {
+        if (displayInfo.PC_NeedPassword==1)
+        {
+            hideCss = string.Empty;
+        }
+    }
+}
+@model Henry.Entity.PhotoCategory
+@section css{
+    <link href="~/Scripts/iCheck/skins/flat/red.css" rel="stylesheet" />
+}
+@section scripts{
+
+    <script src="~/Scripts/iCheck/icheck.min.js"></script>
+    <script src="~/Scripts/jquery.blockUI.js"></script>
+    <script src="~/Scripts/lhgdialog/lhgdialogPlus.js"></script>
+
+    <script type="text/javascript">
+        $(function () {
+            $('.category-cbox').iCheck({
+                checkboxClass: 'icheckbox_flat-red top6px',
+                radioClass: 'iradio_flat-red'
+            });
+            $('#pcategory-status').iCheck('@(displayInfo.PC_Status == 1 ? "check" : "uncheck")');
+            $('#pcategory-show').iCheck('@(displayInfo.PC_Show == 1 ? "check" : "uncheck")');
+            $('#pcategory-needpwd').iCheck('@(displayInfo.PC_NeedPassword == 1 ? "check" : "uncheck")')
+                                    .on("ifChecked", function (event) { $("#pcategory-password").show(); })
+                                    .on("ifUnchecked", function (event) { $("#pcategory-password").hide(); });;
+
+            $("#btn-submit").click(function () {
+                if (tools.valicate()) {
+                    var postContent = {};
+                    postContent.PC_ID = '@displayInfo.PC_ID';
+                    postContent.PC_Name = $("#pcategory-name").val();
+                    postContent.PC_Desc = $("#pcategory-desc").val();
+                    postContent.PC_Sort = $("#pcategory-sort").val();
+                    postContent.PC_Password = $("#pcategory-password").val();
+                    postContent.PC_NeedPassword = $("#pcategory-needpwd").prop("checked") ? 1 : 0;
+                    postContent.PC_Show = $("#pcategory-show").prop("checked") ? 1 : 0;
+                    postContent.PC_Status = $("#pcategory-status").prop("checked") ? 1 : 0;
+                    tools.postData($('#pcategory-data').attr("action"), postContent, function (data) {
+                        if (data.success) {
+                            winAlert(data.message, true, true, "parent", 3);
+                        }
+                        else {
+                            winAlert(data.message);
+                        }
+                    }, "#pcategory-data")
+                }
+                return false;
+            });
+        });
+    </script>
+}
+<div class="col-xs-12 margint20">
+    <form class="form-horizontal" id="pcategory-data" action="{dns}api/photocategory/update" method="post">
+        <div class="form-group">
+            <label class="col-sm-3 control-label no-padding-right" for="pcategory-name">图片类别名称 </label>
+            <div class="col-sm-9">
+                <input type="text" id="pcategory-name" placeholder="请输入图片类别名称" class="col-xs-6 required" data-required-msg="请输入图片类别名称！" value="@displayInfo.PC_Name">
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="col-sm-3 control-label no-padding-right" for="pcategory-desc">图片类别描述 </label>
+            <div class="col-sm-9">
+                <input type="text" id="pcategory-desc" placeholder="请输入图片类别描述" class="col-xs-9 required" data-required-msg="请输入图片类别描述！" value="@displayInfo.PC_Desc">
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="col-sm-3 control-label no-padding-right" for="pcategory-show">需要密码查看 </label>
+            <div class="col-sm-2 ">
+                <input id="pcategory-needpwd" class="category-cbox" type="checkbox" />
+            </div>
+            <div class="col-sm-7 "><input id="pcategory-password" style="@hideCss" type="text" value="@displayInfo.PC_Password" /></div>
+        </div>
+        <div class="form-group">
+            <label class="col-sm-3 control-label no-padding-right" for="pcategory-sort">排序 </label>
+            <div class="col-sm-9">
+                <input type="text" id="pcategory-sort" placeholder="请输入类别排序" data-required-msg="请输入排序！" class="col-xs-2 required" value="@displayInfo.PC_Sort" />
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="col-sm-3 control-label no-padding-right" for="pcategory-show">前台显示 </label>
+            <div class="col-sm-2 ">
+                <input id="pcategory-show" class="category-cbox" type="checkbox" />
+            </div>
+            <label class="col-sm-2 control-label no-padding-right" for="pcategory-status">有效 </label>
+            <div class="col-sm-5 ">
+                <input id="pcategory-status" class="category-cbox" type="checkbox" />
+            </div>
+        </div>
+
+    </form>
+</div>
+<div class="clearfix form-actions fixed-bottom col-xs-12">
+    <div class=" col-md-12" style="text-align: center;">
+        <button class="btn btn-info" type="button" id="btn-submit">
+            <i class="ace-icon fa fa-check bigger-110"></i>
+            @if (displayInfo.PC_ID > 0)
+            {
+                <text>保存</text>
+            }
+            else
+            { <text>新增</text>}
+        </button>
+        &nbsp; &nbsp; &nbsp;
+        <button class="btn closeDialog" type="button" data-content="确定关闭吗？">
+            <i class="ace-icon fa fa-undo bigger-110"></i>
+            关闭
+        </button>
+    </div>
+</div>

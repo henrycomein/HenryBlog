@@ -1,0 +1,33 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+    <title></title>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <meta charset="utf-8">
+    <link href="~/Content/bootstrap.min.css" rel="stylesheet" />
+    <link href="~/Content/font-awesome.min.css" rel="stylesheet" />
+    <!-- ace styles -->
+    <link rel="stylesheet" href="~/Content/ace.min.css" class="ace-main-stylesheet" id="main-ace-style">
+    <link href="~/Content/additional.css" rel="stylesheet" />
+    <!--[if lte IE 9]>
+        <link rel="stylesheet" href="~/Content/ace-part2.min.css" class="ace-main-stylesheet" />
+    <![endif]-->
+    <!--[if lte IE 9]>
+      <link rel="stylesheet" href="~/Content/ace-ie.min.css" />
+    <![endif]-->
+    @RenderSection("css", false)
+    <!--[if lte IE 8]>
+    <script src="~/Scripts/html5shiv.js"></script>
+    <script src="~/Scripts/respond.min.js"></script>
+    <![endif]-->
+</head>
+
+<body class="no-skin">
+    @RenderBody()
+    <script src="~/Scripts/jquery.min.js"></script>
+    <script src="~/Scripts/bootstrap.min.js"></script>
+    <script src="~/Scripts/common.js"></script>
+    @RenderSection("scripts", required: false)
+</body>
+</html>

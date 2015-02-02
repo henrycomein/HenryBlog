@@ -1,0 +1,451 @@
+﻿@{
+    ViewBag.Title = "Home Page";
+    Layout = null;
+    var allMenu = (List<Henry.Entity.Menus>)ViewBag.UserMenus;
+    var topMenu = allMenu.Where(m => m.M_ParentID == 0);
+}
+<!DOCTYPE html>
+<html lang="en"><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+		<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+		<meta charset="utf-8">
+		<title>主页 - 管理后台</title>
+
+		<meta name="description" content="overview &amp; stats">
+		<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+
+		<!-- bootstrap & fontawesome -->
+		<link href="~/Content/bootstrap.min.css" rel="stylesheet" />
+		<link href="~/Content/font-awesome.min.css" rel="stylesheet" />
+		<!-- page specific plugin styles -->
+
+		<!-- text fonts -->
+		<link href="~/Content/Open_Sans.css" rel="stylesheet" />
+
+		<!-- ace styles -->
+		<link rel="stylesheet"href="~/Content/ace.min.css" class="ace-main-stylesheet" id="main-ace-style">
+		<!--[if lte IE 9]>
+			<link rel="stylesheet" href="~/Content/ace-part2.min.css" class="ace-main-stylesheet" />
+		<![endif]-->
+
+		<!--[if lte IE 9]>
+		  <link rel="stylesheet" href="~/Content/css/ace-ie.min.css" />
+		<![endif]-->
+
+		<script src="~/Scripts/ace-extra.min.js"></script>
+
+		<!-- HTML5shiv and Respond.js for IE8 to support HTML5 elements and media queries -->
+
+		<!--[if lte IE 8]>
+		<script src="~/Scripts/html5shiv.js"></script>
+		<script src="~/Scripts/respond.min.js"></script>
+		<![endif]-->
+	<style type="text/css">.jqstooltip { position: absolute;left: 0px;top: 0px;visibility: hidden;background: rgb(0, 0, 0) transparent;background-color: rgba(0,0,0,0.6);filter:progid:DXImageTransform.Microsoft.gradient(startColorstr=#99000000, endColorstr=#99000000);-ms-filter: "progid:DXImageTransform.Microsoft.gradient(startColorstr=#99000000, endColorstr=#99000000)";color: white;font: 10px arial, san serif;text-align: left;white-space: nowrap;padding: 5px;border: 1px solid white;z-index: 10000;}.jqsfield { color: white;font: 10px arial, san serif;text-align: left;}</style></head>
+
+	<body class="no-skin">
+		<div id="navbar" class="navbar navbar-default navbar-fixed-top">
+			<div class="navbar-container" id="navbar-container">
+				<button type="button" class="navbar-toggle menu-toggler pull-left fixed" id="menu-toggler" data-target="#sidebar">
+					<span class="sr-only">Toggle sidebar</span>
+
+					<span class="icon-bar"></span>
+
+					<span class="icon-bar"></span>
+
+					<span class="icon-bar"></span>
+				</button>
+
+				<div class="navbar-header pull-left">
+					<a href="http://responsiweb.com/themes/preview/ace/1.3.3/#" class="navbar-brand">
+						<small>
+							<i class="fa fa-leaf"></i>
+							Ace Admin
+						</small>
+					</a>
+				</div>
+
+				<div class="navbar-buttons navbar-header pull-right" role="navigation">
+					<ul class="nav ace-nav">
+						<li class="grey">
+							<a data-toggle="dropdown" class="dropdown-toggle" href="http://responsiweb.com/themes/preview/ace/1.3.3/#">
+								<i class="ace-icon fa fa-bell icon-animated-bell"></i>
+								<span class="badge badge-important">8</span>
+							</a>
+
+							<ul class="dropdown-menu-right dropdown-navbar navbar-pink dropdown-menu dropdown-caret dropdown-close">
+								<li class="dropdown-header">
+									<i class="ace-icon fa fa-exclamation-triangle"></i>
+									8 Notifications
+								</li>
+
+								<li class="dropdown-content ace-scroll" style="position: relative;"><div class="scroll-track" style="display: none;"><div class="scroll-bar"></div></div><div class="scroll-content" style="max-height: 200px;">
+									<ul class="dropdown-menu dropdown-navbar navbar-pink">
+										<li>
+											<a href="http://responsiweb.com/themes/preview/ace/1.3.3/#">
+												<div class="clearfix">
+													<span class="pull-left">
+														<i class="btn btn-xs no-hover btn-pink fa fa-comment"></i>
+														New Comments
+													</span>
+													<span class="pull-right badge badge-info">+12</span>
+												</div>
+											</a>
+										</li>
+
+										<li>
+											<a href="http://responsiweb.com/themes/preview/ace/1.3.3/#">
+												<i class="btn btn-xs btn-primary fa fa-user"></i>
+												Bob just signed up as an editor ...
+											</a>
+										</li>
+
+										<li>
+											<a href="http://responsiweb.com/themes/preview/ace/1.3.3/#">
+												<div class="clearfix">
+													<span class="pull-left">
+														<i class="btn btn-xs no-hover btn-success fa fa-shopping-cart"></i>
+														New Orders
+													</span>
+													<span class="pull-right badge badge-success">+8</span>
+												</div>
+											</a>
+										</li>
+
+										<li>
+											<a href="http://responsiweb.com/themes/preview/ace/1.3.3/#">
+												<div class="clearfix">
+													<span class="pull-left">
+														<i class="btn btn-xs no-hover btn-info fa fa-twitter"></i>
+														Followers
+													</span>
+													<span class="pull-right badge badge-info">+11</span>
+												</div>
+											</a>
+										</li>
+									</ul>
+								</div></li>
+
+								<li class="dropdown-footer">
+									<a href="http://responsiweb.com/themes/preview/ace/1.3.3/#">
+										See all notifications
+										<i class="ace-icon fa fa-arrow-right"></i>
+									</a>
+								</li>
+							</ul>
+						</li>
+
+						<li class="green">
+							<a data-toggle="dropdown" class="dropdown-toggle" href="http://responsiweb.com/themes/preview/ace/1.3.3/#">
+								<i class="ace-icon fa fa-envelope icon-animated-vertical"></i>
+								<span class="badge badge-success">5</span>
+							</a>
+
+							<ul class="dropdown-menu-right dropdown-navbar dropdown-menu dropdown-caret dropdown-close">
+								<li class="dropdown-header">
+									<i class="ace-icon fa fa-envelope-o"></i>
+									5 Messages
+								</li>
+
+								<li class="dropdown-content ace-scroll" style="position: relative;"><div class="scroll-track" style="display: none;"><div class="scroll-bar"></div></div><div class="scroll-content" style="max-height: 200px;">
+									<ul class="dropdown-menu dropdown-navbar">
+										<li>
+											<a href="http://responsiweb.com/themes/preview/ace/1.3.3/#" class="clearfix">
+												<img src="avatar.png" class="msg-photo" alt="Alex&#39;s Avatar">
+												<span class="msg-body">
+													<span class="msg-title">
+														<span class="blue">Alex:</span>
+														Ciao sociis natoque penatibus et auctor ...
+													</span>
+
+													<span class="msg-time">
+														<i class="ace-icon fa fa-clock-o"></i>
+														<span>a moment ago</span>
+													</span>
+												</span>
+											</a>
+										</li>
+
+										<li>
+											<a href="http://responsiweb.com/themes/preview/ace/1.3.3/#" class="clearfix">
+												<img src="avatar3.png" class="msg-photo" alt="Susan&#39;s Avatar">
+												<span class="msg-body">
+													<span class="msg-title">
+														<span class="blue">Susan:</span>
+														Vestibulum id ligula porta felis euismod ...
+													</span>
+
+													<span class="msg-time">
+														<i class="ace-icon fa fa-clock-o"></i>
+														<span>20 minutes ago</span>
+													</span>
+												</span>
+											</a>
+										</li>
+
+										<li>
+											<a href="http://responsiweb.com/themes/preview/ace/1.3.3/#" class="clearfix">
+												<img src="avatar4.png" class="msg-photo" alt="Bob&#39;s Avatar">
+												<span class="msg-body">
+													<span class="msg-title">
+														<span class="blue">Bob:</span>
+														Nullam quis risus eget urna mollis ornare ...
+													</span>
+
+													<span class="msg-time">
+														<i class="ace-icon fa fa-clock-o"></i>
+														<span>3:15 pm</span>
+													</span>
+												</span>
+											</a>
+										</li>
+
+										<li>
+											<a href="http://responsiweb.com/themes/preview/ace/1.3.3/#" class="clearfix">
+												<img src="avatar2.png" class="msg-photo" alt="Kate&#39;s Avatar">
+												<span class="msg-body">
+													<span class="msg-title">
+														<span class="blue">Kate:</span>
+														Ciao sociis natoque eget urna mollis ornare ...
+													</span>
+
+													<span class="msg-time">
+														<i class="ace-icon fa fa-clock-o"></i>
+														<span>1:33 pm</span>
+													</span>
+												</span>
+											</a>
+										</li>
+
+										<li>
+											<a href="http://responsiweb.com/themes/preview/ace/1.3.3/#" class="clearfix">
+												<img src="avatar5.png" class="msg-photo" alt="Fred&#39;s Avatar">
+												<span class="msg-body">
+													<span class="msg-title">
+														<span class="blue">Fred:</span>
+														Vestibulum id penatibus et auctor  ...
+													</span>
+
+													<span class="msg-time">
+														<i class="ace-icon fa fa-clock-o"></i>
+														<span>10:09 am</span>
+													</span>
+												</span>
+											</a>
+										</li>
+									</ul>
+								</div></li>
+
+								<li class="dropdown-footer">
+									<a href="http://responsiweb.com/themes/preview/ace/1.3.3/inbox.html">
+										See all messages
+										<i class="ace-icon fa fa-arrow-right"></i>
+									</a>
+								</li>
+							</ul>
+						</li>
+
+						<li class="light-blue">
+							<a data-toggle="dropdown" href="http://responsiweb.com/themes/preview/ace/1.3.3/#" class="dropdown-toggle">
+								<img class="nav-user-photo" src="user.jpg" alt="Jason&#39;s Photo">
+								<span class="user-info">
+									<small>Welcome,</small>
+									Jason
+								</span>
+
+								<i class="ace-icon fa fa-caret-down"></i>
+							</a>
+
+							<ul class="user-menu dropdown-menu-right dropdown-menu dropdown-yellow dropdown-caret dropdown-close">
+								<li>
+									<a href="http://responsiweb.com/themes/preview/ace/1.3.3/#">
+										<i class="ace-icon fa fa-cog"></i>
+										Settings
+									</a>
+								</li>
+
+								<li>
+									<a href="http://responsiweb.com/themes/preview/ace/1.3.3/profile.html">
+										<i class="ace-icon fa fa-user"></i>
+										Profile
+									</a>
+								</li>
+
+								<li class="divider"></li>
+
+								<li>
+									<a href="@Url.Content("~/logout")">
+										<i class="ace-icon fa fa-power-off"></i>
+										Logout
+									</a>
+								</li>
+							</ul>
+						</li>
+					</ul>
+				</div>
+			</div><!-- /.navbar-container -->
+		</div>
+
+    <div class="main-container" id="main-container">
+			<div id="sidebar" class="sidebar   responsive sidebar-fixed" data-sidebar="true" data-sidebar-scroll="true" data-sidebar-hover="true">
+				<div class="nav-wrap-up pos-rel"><div class="nav-wrap"><div style="position: relative; top: 0px; transition: top 0.15s; -webkit-transition: top 0.15s;"><div class="sidebar-shortcuts" id="sidebar-shortcuts">
+					<div class="sidebar-shortcuts-large" id="sidebar-shortcuts-large">
+						<button class="btn btn-success">
+							<i class="ace-icon fa fa-signal"></i>
+						</button>
+
+						<button class="btn btn-info">
+							<i class="ace-icon fa fa-pencil"></i>
+						</button>
+
+						<button class="btn btn-warning">
+							<i class="ace-icon fa fa-users"></i>
+						</button>
+
+						<button class="btn btn-danger">
+							<i class="ace-icon fa fa-cogs"></i>
+						</button>
+					</div>
+
+					<div class="sidebar-shortcuts-mini" id="sidebar-shortcuts-mini">
+						<span class="btn btn-success"></span>
+
+						<span class="btn btn-info"></span>
+
+						<span class="btn btn-warning"></span>
+
+						<span class="btn btn-danger"></span>
+					</div>
+				</div>
+                    <ul class="nav nav-list">
+					<li class="active">
+						<a href="Home/MainPage">
+							<i class="menu-icon fa fa-tachometer"></i>
+							<span class="menu-text"> 首页 </span>
+						</a>
+
+						<b class="arrow"></b>
+					</li>
+                    @foreach (var m in topMenu)
+                    {
+                        var items=allMenu.Where(i=>i.M_ParentID==m.M_ID);
+                        if (items.Count() == 0)
+                            {
+                                <li class="hover">
+                                <a href="@m.M_Url" target="_self">
+							        <i class="menu-icon fa fa-list-alt"></i>
+							        <span class="menu-text"> @m.M_Name  </span>
+						        </a>
+                                <b class="arrow"></b>
+                               </li>
+                            }
+                            else
+                            {
+                                <li class="hover pull_up">
+                                    <a href="@m.M_Url" target="_self" class="dropdown-toggle">
+                                        <i class="menu-icon fa fa-pencil-square-o"></i>
+                                        <span class="menu-text">@m.M_Name </span>
+                                        <b class="arrow fa fa-angle-right"></b>
+                                    </a>
+                                <b class="arrow"></b>
+                                <ul class="submenu">
+                                    @foreach (var item in items)
+                                    {
+                                        var itemChild = allMenu.Where(i => i.M_ParentID == item.M_ID);
+							            if (itemChild.Count() == 0)
+                                            {
+                                                <li class="hover">
+                                                    <a href="@item.M_Url" target="_self">
+                                                        <i class="menu-icon fa fa-caret-right"></i>
+                                                        @item.M_Name
+                                                    </a>
+								                <b class="arrow"></b>
+                                                </li>
+                                            }
+                                            else
+                                            {
+                                                <li class="hover pull_up">
+                                                    <a href="@item.M_Url" target="_self" class="dropdown-toggle">
+                                                        <i class="menu-icon fa fa-caret-right"></i>
+                                                        @item.M_Name
+                                                        <b class="arrow fa fa-angle-right"></b>
+                                                    </a>
+								                <b class="arrow"></b>
+                                                
+								                <ul class="submenu">
+                                                    @foreach(var iChild in itemChild)
+                                                    {
+									                    <li class="hover">
+                                                            <a href="@iChild.M_Url" target="_self">
+                                                                <i class="menu-icon fa fa-leaf green"></i>
+                                                                @iChild.M_Name
+                                                            </a>
+										                    <b class="arrow"></b>
+									                    </li>
+                                                    }
+                                               </ul>
+                                                </li>
+                                            }
+                                        
+                                    }
+                                </ul>
+                                </li>
+                            }
+                       
+                    }
+
+				</ul></div></div><div class="ace-scroll nav-scroll scroll-disabled"><div class="scroll-track" style="display: none;"><div class="scroll-bar" style="top: 0px; transition: top 0.1s; -webkit-transition: top 0.1s;"></div></div><div class="scroll-content"><div></div></div></div></div>
+
+				<div class="sidebar-toggle sidebar-collapse" id="sidebar-collapse" style="z-index: 1;">
+					<i class="ace-icon fa fa-angle-double-left" data-icon1="ace-icon fa fa-angle-double-left" data-icon2="ace-icon fa fa-angle-double-right"></i>
+				</div>
+
+			</div>
+
+			<div class="main-content">
+				<div class="main-content-inner">
+					<div class="breadcrumbs breadcrumbs-fixed" id="breadcrumbs">
+
+						<ul class="breadcrumb">
+							<li>
+								<i class="ace-icon fa fa-home home-icon"></i>
+								<a href="http://responsiweb.com/themes/preview/ace/1.3.3/#">Home</a>
+							</li>
+							<li class="active">Dashboard</li>
+						</ul>
+					</div>
+
+					<div class="page-content">
+						<div class="row">
+                            MainPage
+						</div>
+                    </div>
+               </div>
+             </div>
+			
+			<a href="http://responsiweb.com/themes/preview/ace/1.3.3/#" id="btn-scroll-up" class="btn-scroll-up btn btn-sm btn-inverse">
+				<i class="ace-icon fa fa-angle-double-up icon-only bigger-110"></i>
+			</a>
+		</div><!-- /.main-container -->
+    <script src="~/Scripts/jquery-1.11.0.min.js"></script>
+ 
+        <script src="~/Scripts/bootstrap.min.js"></script>
+
+		<!-- page specific plugin scripts -->
+
+		<!--[if lte IE 8]>
+		  <script src="dist/js/excanvas.min.js"></script>
+		<![endif]-->
+		<script src="~/Scripts/jquery-ui.custom.min.js"></script>
+		<script src="~/Scripts/jquery.ui.touch-punch.min.js"></script>
+		<script src="~/Scripts/jquery.easypiechart.min.js"></script>
+		<script src="~/Scripts/jquery.sparkline.min.js"></script>
+		<script src="~/Scripts/jquery.flot.min.js"></script>
+		<script src="~/Scripts/jquery.flot.pie.min.js"></script>
+		<script src="~/Scripts/jquery.flot.resize.min.js"></script>
+
+		<!-- ace scripts -->
+		<script src="~/Scripts/ace-elements.min.js"></script>
+		<script src="~/Scripts/ace.min.js"></script>
+	
+<div class="tooltip top in" style="display: none;"><div class="tooltip-inner"></div></div>
+</body>
+</html>

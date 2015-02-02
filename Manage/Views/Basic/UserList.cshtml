@@ -1,0 +1,134 @@
+﻿@{
+    ViewBag.Title = "ParentMenuSelect";
+
+}
+@section css{
+     <link href="~/Scripts/ztree/css/zTreeStyle/zTreeStyle.css" rel="stylesheet" />
+     <link href="~/Scripts/iCheck/skins/flat/red.css" rel="stylesheet" />
+}
+@section scripts{
+    <script src="~/Scripts/ztree/js/jquery.ztree.all-3.5.min.js"></script>
+    <script src="~/Scripts/iCheck/icheck.min.js"></script>
+    <script src="~/Scripts/jquery.blockUI.js"></script>
+    <script src="~/Scripts/lhgdialog/lhgdialog.min.js?skin=jtop"></script>
+    <script src="~/Scripts/lhgdialog/lhgdialogPlus.js"></script>
+    <script type="text/javascript">
+        var treeObj;
+        $(function () {
+            var callback = function (data) {
+                var options = {
+                    view: {
+                        showIcon: true
+                    },
+                    data: {
+                        simpleData: {
+                            enable: true,
+                            idKey: "id",
+                            pIdKey: "pid"
+                        }
+                    },
+                    callback: {
+                        onCheck: function (event, treeId, treeNode) {
+                            $("#btn-save").attr("data-id", treeNode.id);
+                            $("#menu-name").val(treeNode.name);
+                            $("#menu-url").val(treeNode.url);
+                            $("#menu-sort").val(treeNode.sort);
+                            $("#menu-status").iCheck(treeNode.status ? "check" : "uncheck");
+                            $("#menuparentname").attr("data-val", treeNode.pid).html(treeNode.fullpname.replace(/,/g, ' <i class="fa fa-caret-right"></i>'));
+                            if (!enableSavebtn) {
+                                $("#btn-save").removeAttr("disabled");
+                            }
+                        }
+                    }
+                }
+
+                treeObj = $.fn.zTree.init($("#menutree"), options, data.items);
+                $.fn.zTree.init($("#menutree1"), options, data.items);
+            }
+            tools.postData('{dns}api/menu/list', null, callback, "#container");
+            //tools.postData('{dns}api/menu/list', { id: '@ViewBag.ID' }, callback, "#baseContainer");
+            $("#btn-select").click(function () {
+                var selectedItem = treeObj.getCheckedNodes(true);
+                if (selectedItem.length == 0) {
+                    winAlert("请选择菜单！", true, false, false);
+                } else {
+                    var tempNode = selectedItem[0].getParentNode();
+                    var fullMenu = [selectedItem[0].name];
+                    while (tempNode != null) {
+                        fullMenu.push(tempNode.name);
+                        tempNode = tempNode.getParentNode();
+                    }
+                    fullMenu.reverse();
+                }
+                W.setMenu(fullMenu, selectedItem[0].id);
+                api.close();
+            });
+        });
+    </script>
+}
+<div class="page-header">
+    <h1>
+        菜单管理
+        <small>
+            <i class="ace-icon fa fa-angle-double-right"></i>
+        </small>
+    </h1>
+</div>
+<div id="baseContainer" class="col-xs-12" style="height: 318px;overflow-y: auto;margin-bottom: 3px;">
+    <ul id="menutree" class="ztree"></ul>
+</div>
+<div class="col-xs-12" id="container">
+    <div class="col-xs-4">
+        <ul id="menutree1" class="ztree "></ul>
+    </div>
+    <div class="col-xs-8">
+        <form class="form-horizontal" id="menu-data" action="{dns}api/menu/update" method="post">
+            <div class="form-group">
+                <label class="col-sm-2 control-label no-padding-right" for="menu-name">菜单名称 </label>
+                <div class="col-sm-10">
+                    <input type="text" id="menu-name" placeholder="请输入菜单名称" class="col-xs-6 required" data-required-msg="请输入菜单名称！" value="">
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="col-sm-2 control-label no-padding-right">上级菜单 </label>
+                <div class="col-sm-10 top6px">
+                    <span id="menuparentname" data-valicate-field="data-val" data-val="0"> 顶级菜单 </span>
+                    <a href="javascript:;" class="popup" data-title="选择上级菜单" data-width="350px" data-content="url:{dns}Basic/MenuSelect/">
+                        <i class="fa fa-pencil-square-o bigger-150 top3px green"></i>
+                        重选
+                    </a>
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="col-sm-2 control-label no-padding-right" for="menu-url">链接地址 </label>
+                <div class="col-sm-10">
+                    <input type="text" id="menu-url" placeholder="请输入菜单名称" class="col-xs-6 required" data-required-msg="请输入链接地址！" value="">
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="col-sm-2 control-label no-padding-right" for="menu-sort">排序 </label>
+                <div class="col-sm-2">
+                    <input type="text" id="menu-sort" placeholder="排序号码" class="col-xs-12 required" data-required-msg="请输入排序！" value="">
+                </div>
+                <label class="col-sm-2 control-label no-padding-right" for="menu-status">有效 </label>
+                <div class="col-sm-6 ">
+                    <input id="menu-status" type="checkbox" />
+                </div>
+            </div>
+            <div class="clearfix form-actions">
+                <div class=" col-md-12" style="text-align: center;">
+                    <button class="btn btn-info" data-id="0" type="button" id="btn-add">
+                        <i class="ace-icon fa fa-check bigger-110"></i>
+                        新增
+                    </button>
+                    &nbsp; &nbsp; &nbsp;
+                    <button class="btn" data-id="0" type="button" id="btn-save" disabled="disabled">
+                        <i class="ace-icon fa fa-undo bigger-110"></i>
+                        保存
+                    </button>
+                </div>
+            </div>
+        </form>
+
+    </div>
+</div>

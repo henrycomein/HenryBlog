@@ -1,0 +1,117 @@
+﻿@{
+    ViewBag.Title = "Login";
+    Layout = null;
+}
+
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="utf-8">
+    <title>登录,是一种态度</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="author" content="Henry">
+    <!-- HTML5 shim, for IE6-8 support of HTML5 elements -->
+    <!--[if lt IE 9]>
+      <script src="http://html5shim.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+    <link href="~/Content/login.css" rel="stylesheet" />
+</head>
+<body>
+    <div class="authcenter" id="authcenter">
+        <div class="authcenter-head">
+            <div class="container fn-clear">
+                <ul class="container-right">
+                    <li class="container-right-item"><a href="http://www.cmyzone.com" target="_blank"  title="返回首页">返回首页</a></li>
+                    <li class="container-seperator"></li>
+                    <li class="container-right-item container-right-last"><a href="#" target="_blank" title="提建议">给我提建议</a></li>
+                </ul>
+            </div>
+        </div>
+        <div class="authcenter-body fn-clear">
+            <h1 class="authcenter-body-logo"></h1>
+            <div class="authcenter-body-login">
+                <div class="login login-modern" >
+                    <form id="login" action="@Url.Content("~/api/account/login")"  method="post" class="ui-form" novalidate="novalidate" data-widget-cid="widget-3" data-qrcode="false">
+                            <h2 class="ui-form-title " id="login-title">登录--这只是一种态度</h2>
+                            <div class="sl-error" id="errorBox" >
+                                <span class="sl-error-text"></span>
+                            </div>
+                            <div class="ui-form-item ui-form-item-focus" id="username">
+                                <label id="label-user" class="ui-label" >
+                                    <span class="ui-icon ui-icon-userDEF">账户名：</span>
+                                </label>
+                                <input type="text" id="input-user" class="ui-input ui-input-normal" name="logonId" autocomplete="off" tabindex="1" value="" maxlength="100" placeholder="Account" data-widget-cid="widget-4" data-explain="">
+                                <div class="ui-form-explain"></div>
+                            </div>
+                            <div class="ui-form-item ui-form-item-20pd" id="password">
+                                <label id="label-editer" class="ui-label" data-desc="登录密码" >
+                                    <span class="ui-icon ui-icon-securityON" id="safeSignCheck">登录密码</span>
+                                </label>
+                                <input type="text" id="input-password" class="ui-input ui-input-normal" name="logonId" autocomplete="off" tabindex="1" value="" maxlength="100" placeholder="Password"  data-widget-cid="widget-4" data-explain="">
+                                <div class="ui-form-explain"></div>
+                            </div>
+                            <div class="ui-form-item ui-form-item-30pd" id="submit">
+                                <input type="submit" value="登 录" class="ui-button" id="login-btn" tabindex="4" />
+                            </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+        <div class="authcenter-foot" id="authcenter-foot">
+            <div class="authcenter-foot-container">
+                <p class="authcenter-foot-link">
+                    
+                </p>
+                <div class="copyright">
+                    飞戈版权所有 2004-2014 
+                </div>
+            </div>
+        </div>
+       <div class="s-skin-container" id="s-skin" ></div>
+    </div>
+    <script src="~/Scripts/jquery-1.11.0.min.js"></script>
+    <script type="text/javascript">
+        $(function () {
+            $("#login").submit(function () {
+                $("#errorBox").removeClass("sl-error-display").find(".sl-error-text").html("");
+                var user = { account: $("#input-user").val(), pwd: $("#input-password").val() };
+                if ($.trim(user.account).length == 0) {
+                    $("#errorBox").addClass("sl-error-display").find(".sl-error-text").html("请输入账号！");
+                }
+                else{
+                    if ($.trim(user.pwd).length == 0)
+                        $("#errorBox").addClass("sl-error-display").find(".sl-error-text").html("请输入密码！");
+                    else {
+                        $("#login-btn").attr("disabled", "disabled").val("登录中...");
+                        var action = $(this).attr("action");
+                        $.post(action, {username:user.account,password:user.pwd},
+                            function (data) {
+                                if (data.success) {
+                                    var paramer = window.location.search.toLowerCase().split('&');
+                                    var redirectUrl=data.url;
+                                    if (paramer.length > 0)
+                                    {
+                                        for (var i = 0; i < paramer.length;i++)
+                                        {
+                                            if (paramer[i].indexOf('returnurl') > -1) {
+                                                redirectUrl = decodeURIComponent(paramer[i].split('=')[1]);
+                                                break;
+                                            }
+                                        }
+                                    }
+                                   window.location.href = redirectUrl;
+                                }
+                                else {
+                                    $("#errorBox").addClass("sl-error-display").find(".sl-error-text").html(data.message);
+                                    $("#login-btn").removeAttr("disabled").val("登 录");
+                                }
+                            },'json')
+                    }
+                }
+                
+                return false;
+            });
+        });
+    </script>
+</body>
+</html>

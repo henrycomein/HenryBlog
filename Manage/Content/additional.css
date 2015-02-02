@@ -1,0 +1,50 @@
+﻿.event-pic {
+margin:0;
+}
+.event-pic dd {
+    float: left;
+    width: 100px;
+    height: 100px;
+    margin-right: 15px;
+    border: 1px solid #e0e0e0;
+    border-radius: 5px;
+    position: relative;
+    cursor: pointer;
+}
+.event-pic dd:hover {
+    border: 1px dashed #fe6e00;
+}
+.icon-remove {
+    float: left;
+    width: 16px;
+    height: 16px;
+}
+.event-pic .icon-remove {
+    display: block;
+    position: absolute;
+    border-radius: 0 0 5px;
+    bottom: -1px;
+    _bottom: -3px;
+    right: -5px;
+    top: -5px;
+    color:#ffd800;
+    font-size:20px;
+}
+.event-pic .icon-remove:hover {
+    color:#fe6e00;
+}
+.event-pic img {
+    max-width:100px;max-height:120px
+}
+.event-pic .event-addpic {
+    font-size: 14px;
+    color: #e0e0e0;
+    display: block;
+    text-align: center;
+    padding-top: 35px;
+    border: 1px dashed #e0e0e0;
+}
+    .event-addpic:hover {
+        /*background: #ffe0c9;*/
+        color:#fe6e00;
+    }

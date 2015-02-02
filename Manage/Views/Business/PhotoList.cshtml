@@ -1,0 +1,89 @@
+﻿@{
+    ViewBag.Title = "PhotoList";
+    string bpath = ViewBag.BasicPath;
+}
+@model List<Henry.Entity.Photo>
+@section scripts{
+<script src="~/Scripts/jquery.blockUI.js"></script>
+    <script src="~/Scripts/jquery.pagination.js"></script>
+    <script src="~/Scripts/lhgdialog/lhgdialog.min.js?skin=jtop"></script>
+    <script src="~/Scripts/lhgdialog/lhgdialogPlus.js"></script>
+<script type="text/javascript">
+
+    $(function () {
+        var target = $(window);
+        $(target).scroll(function (event) {
+            if ($(target).scrollTop() + 10 >= $(document).height() - $(target).height()) {
+                if ($("#category-content").attr("data-load-complete") == "0") {
+                    getArticleEvent.getarticles();
+                }
+            }
+        });
+        $(".setcover").click(function () {
+            var obj = $(this);
+            $confirm(obj, function () {
+                tools.postData('{dns}api/photocategory/setcover',
+                    { pid: obj.attr("data-id"),id: '@ViewBag.CategoryID' },
+                    function (data) {
+                        if (data.success) {
+                            winAlert(data.message, false, true, 'this', 3);
+                        }
+                        else {
+                            winAlert(data.message, false, true, false, 3);
+                        }
+                    });
+                return false;
+            },"确定设为类别封面吗？");
+        });
+    });
+</script>    
+}
+<div class="page-header">
+    <h1>
+        <a href="@(Url.Content("~/business/photocategorylist"))">相册管理</a>
+        <small>
+            <i class="ace-icon fa fa-angle-double-right"></i>
+        </small>
+        @ViewBag.CategoryName
+		<small>
+            <i class="ace-icon fa fa-angle-double-right"></i>
+        </small>
+        <button class="btn btn-info" type="button" title="新增" data-rel="popup" data-content="url:{dns}business/photo"  data-width="560px" data-height="550px" data-title="新增" data-id="0">
+            <i class="ace-icon fa fa-plus bigger150" ></i>新增
+        </button>
+    </h1>
+</div>
+<div>
+    <ul class="ace-thumbnails clearfix">
+        @foreach(var i in Model)
+        { 
+        <li>
+            <a href="javascript:;"  class="cboxElement">
+                <img width="150" height="150" alt="150x150" src="@(string.Concat(bpath,i.P_FileName))">
+                <div class="text">
+                    <div class="inner">@i.P_Desc</div>
+                </div>
+            </a>
+            <div class="tags">
+                <span class="label-holder">
+                    <span class="label label-warning arrowed-in">@i.P_TagName</span>
+                </span>
+            </div>
+            <div class="tools tools-bottom">
+                <a href="javascript:;" class="setcover" title="设置为封面"  data-id="@i.P_ID" >
+                    <i class="ace-icon fa fa-cog fa-spin green" title="设置为封面"></i>
+                </a>
+
+                <a href="javascript:;" title="编辑" data-rel="popup" data-content="url:{dns}business/photo/@i.P_ID" data-width="560px" data-height="550px"  data-title="编辑" >
+                    <i class="ace-icon fa fa-pencil"  ></i>
+                </a>
+
+                <a href="javascript:;" data-rel="delete" data-category="photocategory"  data-id="@i.P_ID" title="刪除">
+                    <i class="ace-icon fa fa-times red" title="刪除"></i>
+                </a>
+            </div>
+        </li>
+        }
+
+    </ul>
+</div>

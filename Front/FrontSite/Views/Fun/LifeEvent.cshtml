@@ -1,0 +1,87 @@
+﻿@{
+    ViewBag.Title = "LifeEvent";
+    var photoBasicUrl = Henry.Common.SettingHelper.PhotoVisitePath();
+    var valid = (int)ViewBag.ValidRequest == 1;
+}
+@section css{
+    <link href="~/Scripts/timelinr/css/timeline.css" rel="stylesheet" />
+     <link href="~/Scripts/lightbox/css/lightbox.css" rel="stylesheet" />
+    @if (!valid)
+    {
+        <link href="~/Scripts/jBox/Source/jBox.css" rel="stylesheet" />
+    }
+}
+@section scripts{
+    <script src="~/Scripts/timelinr/history_timeline.js"></script>
+     <script src="~/Scripts/lightbox/js/lightbox.min.js"></script>
+    @if (!valid)
+    {
+        <script src="~/Scripts/jBox/Source/jBox.min.js"></script>
+        <script type="text/javascript">
+            $(function () {
+                tools.initPasswordModel('{dns}valicate/checkeventpassword', {}).open();
+            });
+        </script>
+    }
+    else
+    {
+         <script type="text/javascript">
+             $(function () {
+                 $(".scroll_content img").addClass("image").attr("data-")
+                 new Timeline({ wrap: $("#timeline") });
+             });
+        </script>   
+    }
+    
+}
+@model Henry.Entity.IndexEvent
+<div class="main-container">
+    @if(Model.MonthData !=null){
+    <div class="event-content">
+        <div id="timeline">
+            <ul id="dates">
+                @foreach (var m in Model.MonthData)
+                { 
+                    <li><a href="javascript:;">@m.Month</a></li>
+                }
+            </ul>
+            <div id="issues">
+                @foreach (var m in Model.MonthData)
+                {
+                    <div class="year_content">
+                        <div class="pad">
+                            <div class="scroll_content">
+                                @foreach (var d in Model.MonthEvent.Where(x => x.Month == m.Month))
+                                {
+                                    <div class="row">
+                                        <div class="text">
+                                            <h1>@d.LE_Title</h1>
+                                            <p>@Html.Raw(d.LE_Desc)</p>
+                                            @if(!string.IsNullOrEmpty(d.LE_Images))
+                                            {
+                                                var imglist =d.LE_Images.Split(',');
+                                                <div class="event-image-container">
+                                                @foreach(var img in imglist)
+                                                {
+                                                    <a href="@(photoBasicUrl+img)" data-lightbox="example-set">
+                                                        <img src="@(photoBasicUrl+img)" class="event-image" />
+                                                    </a>
+                                                }
+                                                </div>
+                                                
+                                            
+                                            }
+                                       </div>
+                                    </div>
+                                }
+                              </div>
+                        </div>
+                    </div>
+                }
+                <a href="javascript:;" id="next"><span>Next</span></a>
+                <a href="javascript:;" id="prev"><span>Previous</span></a>
+            </div>
+        </div>
+    </div>
+    }
+</div>

@@ -1,0 +1,18 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<CacheItems>
+  <Item name="TodayPostArticleRank" >
+    <!--过期时间(分钟)-->
+    <ExpirationTime>10</ExpirationTime>
+    <Desc>今日发表的文章排名</Desc>
+  </Item>
+  <Item name="Category" >
+    <!--过期时间(分钟)-->
+    <ExpirationTime>720</ExpirationTime>
+    <Desc>首页分类以及发表文章时分类</Desc>
+  </Item>
+  <Item name="FaceImage" >
+    <!--过期时间(分钟)-->
+    <ExpirationTime>720</ExpirationTime>
+    <Desc>发表文章时表情数据</Desc>
+  </Item>
+</CacheItems>

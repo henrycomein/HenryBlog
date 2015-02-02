@@ -1,0 +1,219 @@
+﻿@{
+    ViewBag.Title = "Category";
+    Layout = "~/Views/Shared/_Child.cshtml";
+    var displayInfo = Model;
+    if (displayInfo == null || displayInfo.AC_ID == 0)
+    {
+        displayInfo = new Henry.Entity.ArticleCategory() { AC_ID = 0, AC_Status = 1, AC_ShowFront = 1, AC_ShowList = 0, AC_IsComplete = 0, AC_Name = "", AC_ParentFullName = "顶级类别", AC_Description = "", AC_Code = "", AC_Sort = 99999 };
+    }
+    var cssparamer = "display:none;";
+    var categoryimg = string.Empty;
+    if(displayInfo.AC_ShowList==1){
+        cssparamer = string.Empty;
+        categoryimg = "<img class=\"middle\" id=\"category-img\" data=\"" + displayInfo.AC_PicName + "\" style=\"max-height: 150px;\" src=\"" + string.Concat(Henry.Common.SettingHelper.ImageVisitePath(), displayInfo.AC_PicName) + "\" />";
+    }
+}
+@model Henry.Entity.ArticleCategory
+@section css{
+    <link href="~/Scripts/editor/css/froala_editor.min.css" rel="stylesheet" />
+    <link href="~/Scripts/editor/css/froala_style.min.css" rel="stylesheet" />
+    <link href="~/Scripts/iCheck/skins/flat/red.css" rel="stylesheet" />
+}
+@section scripts{
+
+    <script src="~/Scripts/editor/js/froala_editor.min.js"></script>
+    <!--[if lt IE 9]>
+        <script src="~/Scripts/editor/js/froala_editor_ie8.min.js"></script>
+    <![endif]-->
+    <script src="~/Scripts/editor/js/langs/zh_cn.js"></script>
+
+    <script src="~/Scripts/iCheck/icheck.min.js"></script>
+    <script src="~/Scripts/jquery.blockUI.js"></script>
+    <script src="~/Scripts/plupload/plupload.full.min.js"></script>
+    <script src="~/Scripts/lhgdialog/lhgdialogPlus.js"></script>
+
+    <script type="text/javascript">
+        $(function () {
+            $("#clicktoupload").hide();
+            $("#category-desc").editable({
+                inlineMode: false,
+                buttons: ['bold', 'italic', 'underline', 'sep', 'color'],
+                width: 400,
+                theme: 'gray',
+                height: '100px'
+            });
+            $('.category-cbox').iCheck({
+                checkboxClass: 'icheckbox_flat-red top6px',
+                radioClass: 'iradio_flat-red'
+            });
+            $('#category-ismin').iCheck('@(displayInfo.AC_ShowList == 1 ? "check" : "uncheck")')
+                                .on("ifChecked", function (event) { $("#uploadPanel").show(); })
+                                .on("ifUnchecked", function (event) { $("#uploadPanel").hide(); });
+
+            $('#category-complete').iCheck('@(displayInfo.AC_IsComplete == 1 ? "check" : "uncheck")');
+            $('#category-showfront').iCheck('@(displayInfo.AC_ShowFront == 1 ? "check" : "uncheck")');
+            $('#category-status').iCheck('@(displayInfo.AC_Status == 1 ? "check" : "uncheck")');
+
+            $("#btn-submit").click(function () {
+                var categorypid = $("#categoryparentname").attr("data-val")
+                if (categorypid.length == 0) {
+                    winAlert($("#categoryparentname").attr("data-required-msg"));
+                    return false;
+                }
+                if (tools.valicate()) {
+                    var postContent = {};
+                    postContent.AC_ID = '@displayInfo.AC_ID';
+                    postContent.AC_Name = $("#category-name").val();
+                    postContent.AC_Description = $("#category-desc").editable('getHTML', true, true);
+                    postContent.AC_ParentID = categorypid;
+                    postContent.AC_Code = $("#category-code").val();
+                    postContent.AC_Sort = $("#category-sort").val();
+                    postContent.AC_ShowList = $("#category-ismin").prop("checked") ? 1 : 0;
+                    postContent.AC_PicName = (function () { if ($("#category-img").length > 0) { return $("#category-img").attr("data") } else { return ""; } })();
+                    postContent.AC_IsComplete = $("#category-complete").prop("checked") ? 1 : 0;
+                    postContent.AC_ShowFront = $("#category-showfront").prop("checked") ? 1 : 0;
+                    postContent.AC_Status = $("#category-status").prop("checked") ? 1 : 0;
+                    tools.postData($("#category-data").attr("action"), postContent, function (data) {
+                        if (data.success) {
+                            winAlert(data.message, true, true, "parent", 3);
+                        }
+                        else {
+                            winAlert(data.message);
+                        }
+                    }, "#category-data")
+                }
+                return false;
+            });
+
+            var uploader = new plupload.Uploader({
+                browse_button: 'uploadPanel', // this can be an id of a DOM element or the DOM element itself
+                url: '@Url.Action("Index", "ImageUpload")' + '?rnd=' + new Date().getTime(),
+                runtimes: "html5,flash,html4",
+                flash_swf_url: '@Url.Content("~/Scripts/plupload/Moxie.swf")',
+                max_file_size: '4mb',
+                filters: { mime_types: [{ title: "Image files", extensions: "jpg,jpeg,gif,png" }] }
+            });
+            uploader.init();
+            uploader.bind('FilesAdded', function (up, files) {
+                if (!$("#uploadspan").hasClass("ace-file-container-nocontent")) {
+                    $("#uploadspan").addClass("ace-file-container-nocontent").removeAttr("data-title");
+                }
+                if ($("#category-img").length > 0) {
+                    $("#category-img").attr('src', '@Url.Content("~/Images/loading.gif")');
+                }
+                else {
+                    var imgDom = '<img class="middle" id="category-img" data="" style="max-height: 150px;" src="@Url.Content("~/Images/loading.gif")" />';
+                    $(imgDom).insertBefore("#defaultIcon");
+                }
+                uploader.start();
+            });
+            uploader.bind('Error', function (up, err) {
+                alert("uploaded error!");
+            });
+            uploader.bind("FileUploaded", function (up, file, res) {
+                var result = $.parseJSON(res.response);
+                if (result.success) {
+                    console.log(result.addtionnalData);
+                    $("#category-img").attr({ "src": result.url, "data": result.addtionnalData }).show()
+                }
+                else {
+                    $("#category-img").attr("src", "").hide();
+                    alert("请上传图片！");
+                }
+            });
+        });
+            function setCategory(fullcategory, id) {
+                $("#categoryparentname").attr("data-val", id).html(fullcategory.join(' <i class="fa fa-caret-right"></i> '));
+            }
+    </script>
+}
+<div class="col-xs-12 margint20">
+    <form class="form-horizontal" id="category-data" action="{dns}api/category/update" method="post">
+        <div class="form-group">
+            <label class="col-sm-2 control-label no-padding-right" for="category-name">类别名称 </label>
+            <div class="col-sm-10">
+                <input type="text" id="category-name" placeholder="请输入类别名称" class="col-xs-6 required" data-required-msg="请输入类别名称！" value="@displayInfo.AC_Name">
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="col-sm-2 control-label no-padding-right">上级类别 </label>
+            <div class="col-sm-10 top6px">
+                <span id="categoryparentname" data-valicate-field="data-val" data-val="@displayInfo.AC_ParentID" data-required-msg="请选择上级类别！" class="required">@(Html.Raw(displayInfo.AC_ParentFullName.Replace(",", " <i class='fa fa-caret-right'></i> ")))</span>
+                <a href="javascript:;" data-rel="popup" data-title="选择上级类别" data-width="350px" data-content="url:{dns}Basic/CategorySelect/@displayInfo.AC_ID">
+                    <i class="fa fa-pencil-square-o bigger-150 top3px green"></i>
+                    重选
+                </a>
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="col-sm-2 control-label no-padding-right" for="category-desc">类别描述 </label>
+            <div class="col-sm-10">
+                <textarea id="category-desc" placeholder="类别描述" class="col-sm-10">@displayInfo.AC_Description</textarea>
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="col-sm-2 control-label no-padding-right" for="category-code">识别代码 </label>
+            <div class="col-sm-4">
+                <input type="text" id="category-code" placeholder="请输入识别代码" data-required-msg="请输入识别代码！" class="col-xs-12 required" value="@displayInfo.AC_Code" />
+            </div>
+            <label class="col-sm-2 control-label no-padding-right" for="category-sort">排序 </label>
+            <div class="col-sm-4">
+                <input type="text" id="category-sort" placeholder="请输入类别排序" data-required-msg="请输入排序！" class="col-xs-2 required" value="@displayInfo.AC_Sort" />
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="col-sm-2 control-label no-padding-right" for="category-ismin">最底层类别 </label>
+            <div class="col-sm-1">
+                <input class="category-cbox " id="category-ismin" type="checkbox" />
+            </div>
+            <div class="col-sm-9">
+                <i class="fa fa-image blue top6px col-sm-2" id="clicktoupload" style="display: block; cursor: pointer;"></i>
+                <div class="col-sm-10">
+                    <div class="editable-input editable-image" id="uploadPanel" style="@cssparamer">
+                        <label class="ace-file-input ace-file-multiple" style="width: 263px;">
+                            <span class="ace-file-container" id="uploadspan" data-title="点击上传">
+                                <span class="ace-file-name center" data-title="No File ...">
+                                   @Html.Raw(categoryimg)
+                                    <i class="pink ace-icon fa fa-picture-o" id="defaultIcon"></i>
+                                </span>
+                            </span>
+                        </label>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="col-sm-2 control-label no-padding-right" for="category-complete">系列完成 </label>
+            <div class="col-sm-1 ">
+                <input class="category-cbox " id="category-complete" type="checkbox" />
+            </div>
+            <label class="col-sm-2 control-label no-padding-right" for="category-showfront">前台显示 </label>
+            <div class="col-sm-1">
+                <input class="category-cbox" id="category-showfront" type="checkbox" />
+            </div>
+            <label class="col-sm-2 control-label no-padding-right" for="category-status">有效 </label>
+            <div class="col-sm-4 ">
+                <input class="category-cbox " id="category-status" type="checkbox" />
+            </div>
+
+        </div>>
+    </form>
+</div>
+<div class="clearfix form-actions fixed-bottom col-xs-12 ">
+    <div class=" col-md-12" style="text-align: center;">
+        <button class="btn btn-info" type="button" id="btn-submit">
+            <i class="ace-icon fa fa-check bigger-110"></i>
+            @if (displayInfo.AC_ID > 0)
+            {
+                <text>保存</text>
+            }
+            else
+            { <text>新增</text>}
+        </button>
+        &nbsp; &nbsp; &nbsp;
+        <button class="btn closeDialog" type="button">
+            <i class="ace-icon fa fa-undo bigger-110"></i>
+            关闭
+        </button>
+    </div>
+</div>

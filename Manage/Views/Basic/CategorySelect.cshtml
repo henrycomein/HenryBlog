@@ -1,0 +1,134 @@
+﻿@{
+    ViewBag.Title = "CategorySelect";
+    Layout = "~/Views/Shared/_Child.cshtml";
+}
+@section css{
+    <link href="~/Scripts/ztree/css/zTreeStyle/zTreeStyle.css" rel="stylesheet" />
+}
+@section scripts{
+    <script src="~/Scripts/ztree/js/jquery.ztree.all-3.5.min.js"></script>
+    <script src="~/Scripts/jquery.blockUI.js"></script>
+    <script src="~/Scripts/lhgdialog/lhgdialogPlus.js"></script>
+    <script type="text/javascript">
+        var treeObj;
+        $(function () {
+            var callback=function(data)
+            {
+                treeObj = $.fn.zTree.init($("#categorytree"), tools.ztreeops, data.items);
+            }
+            tools.postData('{dns}api/category/tree', { id: '@ViewBag.ID' }, callback, "#baseContainer");
+            $("#btn-select").click(function () {
+                var selectedItem = treeObj.getCheckedNodes(true);
+                if (selectedItem.length == 0) {
+                    winAlert("请选择类别！", true, false, false);
+                } else {
+                    var tempNode = selectedItem[0].getParentNode();
+                    var fullCategory = [selectedItem[0].name];
+                    while (tempNode != null)
+                    {
+                        fullCategory.push(tempNode.name);
+                        tempNode = tempNode.getParentNode();
+                    }
+                    fullCategory.reverse();
+                }
+                api.get(api.data.pid).setCategory(fullCategory, selectedItem[0].id);
+                api.close();
+            });
+        });
+    </script>
+}
+<div id="baseContainer" class="col-xs-12" style="height: 318px;overflow-y: auto;margin-bottom: 3px;">
+    <ul id="categorytree" class="ztree"></ul>
+</div>
+<div class="widget-main padding-8 hide">
+    <ul id="tree1" class="tree tree-selectable" role="tree">
+        <li class="tree-branch hide" data-template="treebranch" role="treeitem" aria-expanded="false">
+            <div class="tree-branch-header"><span class="tree-branch-name"><i class="icon-folder ace-icon tree-plus"></i><span class="tree-label"></span></span></div>
+            <ul class="tree-branch-children" role="group"></ul>
+            <div class="tree-loader hide" role="alert">
+                <div class="tree-loading"><i class="ace-icon fa fa-refresh fa-spin blue"></i></div>
+            </div>
+        </li>
+        <li class="tree-item hide" data-template="treeitem" role="treeitem"><span class="tree-item-name"><i class="icon-item ace-icon fa fa-times"></i><span class="tree-label"></span></span></li>
+        <li class="tree-branch tree-open" role="treeitem" aria-expanded="true">
+            <div class="tree-branch-header"><span class="tree-branch-name"><i class="icon-folder ace-icon tree-minus"></i><span class="tree-label">For Sale</span>					</span></div>
+            <ul class="tree-branch-children" role="group">
+                <li class="tree-item" role="treeitem"><span class="tree-item-name"><i class="icon-item ace-icon fa fa-times"></i><span class="tree-label">Appliances</span>				</span></li>
+                <li class="tree-item tree-selected" role="treeitem"><span class="tree-item-name"><i class="icon-item ace-icon fa fa-check"></i><span class="tree-label">Arts &amp; Crafts</span>				</span></li>
+                <li class="tree-item tree-selected" role="treeitem"><span class="tree-item-name"><i class="icon-item ace-icon fa fa-check"></i><span class="tree-label">Clothing</span>				</span></li>
+                <li class="tree-item" role="treeitem"><span class="tree-item-name"><i class="icon-item ace-icon fa fa-times"></i><span class="tree-label">Computers</span>				</span></li>
+                <li class="tree-item" role="treeitem"><span class="tree-item-name"><i class="icon-item ace-icon fa fa-times"></i><span class="tree-label">Jewelry</span>				</span></li>
+                <li class="tree-item" role="treeitem"><span class="tree-item-name"><i class="icon-item ace-icon fa fa-times"></i><span class="tree-label">Office &amp; Business</span>				</span></li>
+                <li class="tree-item" role="treeitem"><span class="tree-item-name"><i class="icon-item ace-icon fa fa-times"></i><span class="tree-label">Sports &amp; Fitness</span>				</span></li>
+            </ul>
+            <div class="tree-loader hide" role="alert">
+                <div class="tree-loading"><i class="ace-icon fa fa-refresh fa-spin blue"></i></div>
+            </div>
+        </li>
+        <li class="tree-branch tree-open" role="treeitem" aria-expanded="true">
+            <div class="tree-branch-header"><span class="tree-branch-name"><i class="icon-folder ace-icon tree-minus"></i><span class="tree-label">Vehicles</span>					</span></div>
+            <ul class="tree-branch-children" role="group">
+                <li class="tree-branch tree-open" role="treeitem" aria-expanded="true">
+                    <div class="tree-branch-header"><span class="tree-branch-name"><i class="icon-folder ace-icon tree-minus"></i><span class="tree-label">Cars</span>					</span></div>
+                    <ul class="tree-branch-children" role="group">
+                        <li class="tree-item tree-selected" role="treeitem"><span class="tree-item-name"><i class="icon-item ace-icon fa fa-check"></i><span class="tree-label">Classics</span>				</span></li>
+                        <li class="tree-item" role="treeitem"><span class="tree-item-name"><i class="icon-item ace-icon fa fa-times"></i><span class="tree-label">Convertibles</span>				</span></li>
+                        <li class="tree-item" role="treeitem"><span class="tree-item-name"><i class="icon-item ace-icon fa fa-times"></i><span class="tree-label">Coupes</span>				</span></li>
+                        <li class="tree-item" role="treeitem"><span class="tree-item-name"><i class="icon-item ace-icon fa fa-times"></i><span class="tree-label">Hatchbacks</span>				</span></li>
+                        <li class="tree-item" role="treeitem"><span class="tree-item-name"><i class="icon-item ace-icon fa fa-times"></i><span class="tree-label">Hybrids</span>				</span></li>
+                        <li class="tree-item" role="treeitem"><span class="tree-item-name"><i class="icon-item ace-icon fa fa-times"></i><span class="tree-label">SUVs</span>				</span></li>
+                        <li class="tree-item" role="treeitem"><span class="tree-item-name"><i class="icon-item ace-icon fa fa-times"></i><span class="tree-label">Sedans</span>				</span></li>
+                        <li class="tree-item" role="treeitem"><span class="tree-item-name"><i class="icon-item ace-icon fa fa-times"></i><span class="tree-label">Trucks</span>				</span></li>
+                    </ul>
+                    <div class="tree-loader hide" role="alert">
+                        <div class="tree-loading"><i class="ace-icon fa fa-refresh fa-spin blue"></i></div>
+                    </div>
+                </li>
+                <li class="tree-item" role="treeitem"><span class="tree-item-name"><i class="icon-item ace-icon fa fa-times"></i><span class="tree-label">Motorcycles</span>				</span></li>
+                <li class="tree-item" role="treeitem"><span class="tree-item-name"><i class="icon-item ace-icon fa fa-times"></i><span class="tree-label">Boats</span>				</span></li>
+            </ul>
+            <div class="tree-loader hide" role="alert">
+                <div class="tree-loading"><i class="ace-icon fa fa-refresh fa-spin blue"></i></div>
+            </div>
+        </li>
+        <li class="tree-branch" role="treeitem" aria-expanded="false">
+            <div class="tree-branch-header"><span class="tree-branch-name"><i class="icon-folder ace-icon tree-plus"></i><span class="tree-label">Rentals</span>					</span></div>
+            <ul class="tree-branch-children" role="group"></ul>
+            <div class="tree-loader hide" role="alert">
+                <div class="tree-loading"><i class="ace-icon fa fa-refresh fa-spin blue"></i></div>
+            </div>
+        </li>
+        <li class="tree-branch" role="treeitem" aria-expanded="false">
+            <div class="tree-branch-header"><span class="tree-branch-name"><i class="icon-folder ace-icon tree-plus"></i><span class="tree-label">Real Estate</span>					</span></div>
+            <ul class="tree-branch-children" role="group"></ul>
+            <div class="tree-loader hide" role="alert">
+                <div class="tree-loading"><i class="ace-icon fa fa-refresh fa-spin blue"></i></div>
+            </div>
+        </li>
+        <li class="tree-branch tree-open" role="treeitem" aria-expanded="true">
+            <div class="tree-branch-header"><span class="tree-branch-name"><i class="icon-folder ace-icon tree-minus"></i><span class="tree-label">Pets</span>					</span></div>
+            <ul class="tree-branch-children" role="group">
+                <li class="tree-item" role="treeitem"><span class="tree-item-name"><i class="icon-item fa fa-times"></i><span class="tree-label">Cats</span>				</span></li>
+                <li class="tree-item" role="treeitem"><span class="tree-item-name"><i class="icon-item ace-icon fa fa-times"></i><span class="tree-label">Dogs</span>				</span></li>
+                <li class="tree-item" role="treeitem"><span class="tree-item-name"><i class="icon-item ace-icon fa fa-times"></i><span class="tree-label">Horses</span>				</span></li>
+                <li class="tree-item" role="treeitem"><span class="tree-item-name"><i class="icon-item ace-icon fa fa-times"></i><span class="tree-label">Reptiles</span>				</span></li>
+            </ul>
+            <div class="tree-loader hide" role="alert">
+                <div class="tree-loading"><i class="ace-icon fa fa-refresh fa-spin blue"></i></div>
+            </div>
+        </li>
+        <li class="tree-item" role="treeitem"><span class="tree-item-name"><i class="icon-item ace-icon fa fa-times"></i><span class="tree-label">Tickets</span>				</span></li>
+        <li class="tree-item" role="treeitem"><span class="tree-item-name"><i class="icon-item ace-icon fa fa-times"></i><span class="tree-label">Services</span>				</span></li>
+        <li class="tree-item" role="treeitem"><span class="tree-item-name"><i class="icon-item ace-icon fa fa-times"></i><span class="tree-label">Personals</span>				</span></li>
+    </ul>
+</div>
+<div class="clearfix form-actions col-xs-12 fixed-bottom">
+    <div class=" col-md-12 center">
+        <button class="btn btn-info" type="button" id="btn-select">
+            <i class="ace-icon fa fa-check bigger-110"></i>
+            选择
+        </button>
+    </div>
+</div>
+
+

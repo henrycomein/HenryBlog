@@ -1,0 +1,199 @@
+﻿@{
+    ViewBag.Title = "Event";
+    Layout = "~/Views/Shared/_Child.cshtml";
+    var displayInfo = Model;
+    if (displayInfo == null || displayInfo.LE_ID==0)
+    {
+        displayInfo = new Henry.Entity.LifeEvent() { LE_ID = 0, LE_Status = 1, LE_Title = "", LE_Desc = "",LE_Date=DateTime.Now };
+    }
+    var basicPath = Henry.Common.SettingHelper.PhotoVisitePath();
+    var category=(List<Henry.Entity.LifeEventCategory>)ViewBag.Category;
+}
+@using Henry.Common
+@model Henry.Entity.LifeEvent
+@section css{
+    <link href="~/Scripts/editor/css/froala_editor.min.css" rel="stylesheet" />
+    <link href="~/Scripts/editor/css/froala_style.min.css" rel="stylesheet" />
+    <link href="~/Scripts/iCheck/skins/flat/red.css" rel="stylesheet" />
+    <link href="~/Scripts/datetimepicker/css/bootstrap-datetimepicker.min.css" rel="stylesheet" />
+}
+@section scripts{
+     
+    <script src="~/Scripts/editor/js/froala_editor.min.js"></script>
+    <!--[if lt IE 9]>
+        <script src="~/Scripts/editor/js/froala_editor_ie8.min.js"></script>
+    <![endif]-->
+   <script src="~/Scripts/editor/js/langs/zh_cn.js"></script>
+    <script src="~/Scripts/datetimepicker/js/bootstrap-datetimepicker.min.js"></script>
+    <script src="~/Scripts/datetimepicker/js/lang/bootstrap-datetimepicker.zh-CN.js"></script>
+    <script src="~/Scripts/iCheck/icheck.min.js"></script>
+    <script src="~/Scripts/plupload/plupload.full.min.js"></script>
+    <script src="~/Scripts/jquery.blockUI.js"></script>
+    <script src="~/Scripts/lhgdialog/lhgdialogPlus.js"></script>
+
+    <script type="text/javascript">
+        $(function () {
+            $("#event-content").editable({
+                inlineMode: false,
+                width: 450,
+                buttons:["bold","italic","underline","color","formatBlock","blockStyle","outdent","indent","createLink","undo","redo","html"],
+                theme: 'gray',
+                height: 150, //高度
+                imageUploadURL: '@Url.Action("Index","ImageUpload")',
+            });
+            $('#event-date').datetimepicker({
+                language:'zh-CN',
+                format: 'yyyy-mm-dd hh:ii',
+                weekStart: 1,
+                todayBtn: true,
+                autoclose: true,
+                todayHighlight: 1,
+                startView: 2,
+                minView: 0,
+                minuteStep: 2,
+                forceParse:true,
+                endDate: new Date()
+            });
+            $(document).on("click", ".icon-remove", function () {
+                $(this).parent().remove();
+            });
+            $('.event-cbox').iCheck({
+                checkboxClass: 'icheckbox_flat-red top6px',
+                radioClass: 'iradio_flat-red'
+            });
+            $('#event-status').iCheck('@(displayInfo.LE_Status==1?"check":"uncheck")');
+
+            $("#btn-submit").click(function () {
+                if (tools.valicate()) {
+                    var postContent = {};
+                    postContent.LE_ID = '@displayInfo.LE_ID';
+                    postContent.LE_CateogryID = $("#event-category").val();
+                    postContent.LE_Date = $("#event-date").val();
+                    postContent.LE_Title = $("#event-title").val();
+                    postContent.LE_Images = (function () {
+                        var imgs = [];
+                        $(".event-pic img").each(function () {
+                            imgs.push($(this).attr("data-url"));
+                        })
+                        return imgs.join(",");
+                    })();
+                    postContent.LE_Desc = $("#event-content").editable('getHTML', true, true);
+                    postContent.LE_Status = $("#event-status").prop("checked") ? 1 : 0;
+                    tools.postData($("#event-data").attr("action"), postContent, function (data) {
+                        if (data.success) {
+                            winAlert(data.message, true, true, "parent", 3);
+                        }
+                        else {
+                            winAlert(data.message);
+                        }
+                    }, "#event-data")
+                }
+                return false;
+            });
+
+            var uploader = new plupload.Uploader({
+                browse_button: 'btn-addpic', // this can be an id of a DOM element or the DOM element itself
+                url: ['@Url.Action("Index", "ImageUpload")', '?rnd=',new Date().getTime(),'&photo=1'].join(''),
+                runtimes: "html5,flash,html4",
+                flash_swf_url: '@Url.Content("~/Scripts/plupload/Moxie.swf")',
+                max_file_size: '4mb',
+                filters: { mime_types: [{ title: "Image files", extensions: "jpg,jpeg,gif,png" }] }
+            });
+            uploader.init();
+            uploader.bind('FilesAdded', function (up, files) {
+                var imgDom = '<dd><img class="middle" upload-complete="0" data-url=""  src="@Url.Content("~/Images/loading.gif")" /><i class="icon-remove fa fa-times-circle" title="删除图片"></i></dd></dd>';
+                $(imgDom).insertBefore("#btn-addpic");
+                uploader.start();
+            });
+            uploader.bind('Error', function (up, err) {
+                alert("uploaded error!");
+            });
+            uploader.bind("FileUploaded", function (up, file, res) {
+                var result = $.parseJSON(res.response);
+                if (result.success) {
+                    $('[upload-complete="0"]').attr({ "src": result.url, "data-url": result.addtionnalData }).removeAttr("upload-complete")
+                }
+                else {
+                    $('[upload-complete="0"]').attr("src", "").hide();
+                    alert("请上传图片！");
+                }
+            });
+        });
+
+    </script>
+}
+<div class="col-xs-12 margint20">
+        <form class="form-horizontal" id="event-data" action="{dns}api/event/update" method="post">
+            <div class="form-group">
+                <label class="col-sm-2 control-label no-padding-right" for="event-date"> 事件日期 </label>
+                <div class="col-sm-10">
+                    <input type="text" id="event-date" placeholder="请输入事件日期" class="col-sm-6 required" data-required-msg="请输入事件日期！" value="@(displayInfo.LE_Date.FormatDateTimeMinute())">
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="col-sm-2 control-label no-padding-right" for="event-title"> 事件标题 </label>
+                <div class="col-sm-10">
+                    <div class="col-sm-3">
+                    <select id="event-category"  class="required" data-required-msg="请选择标题类别！">
+                        <option value="">--请选择--</option>
+                        @foreach (var c in category)
+                        { 
+                            <option value="@c.LEC_ID" @(c.LEC_ID==@displayInfo.LE_CateogryID?"selected":"")>@c.LEC_Name</option>
+                        }
+                    </select>
+                   </div>
+                    <input type="text" id="event-title" placeholder="请输入事件标题" class="col-sm-5 required" data-required-msg="请输入事件标题！" value="@displayInfo.LE_Title" />
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="col-sm-2 control-label no-padding-right" for="event-content">事件内容 </label>
+                <div class="col-sm-10">
+                    <textarea id="event-content" placeholder="事件内容" class="col-sm-10" >@displayInfo.LE_Desc</textarea>
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="col-sm-2 control-label no-padding-right" for="event-status"> 相关图片 </label>
+                <div class="col-sm-10 ">
+                    <dl class="event-pic clearfix">
+                        @if (displayInfo.LE_Images != null)
+                        {
+                            var imgs = displayInfo.LE_Images.Split(',');
+                            foreach (var imgurl in imgs)
+                            {
+                                <dd >
+							        <img src="@(basicPath + imgurl)" data-url="@imgurl" />
+                                    <i class="icon-remove fa fa-times-circle" title="删除图片"></i>                            
+                                </dd>
+                            }
+                        }
+                        <dd id="btn-addpic" class="event-addpic"><i class="ace-icon fa fa-plus bigger-150" style="display:block;"></i><span >新增图片</span></dd>
+                    </dl>
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="col-sm-2 control-label no-padding-right" for="event-status"> 有效 </label>
+                <div class="col-sm-10 ">
+                    <input name="event-status" class="event-cbox" id="event-status" type="checkbox" />
+                </div>
+            </div>
+           
+        </form>
+    </div>
+<div class="clearfix form-actions fixed-bottom col-xs-12 ">
+    <div class=" col-md-12" style="text-align: center;">
+        <button class="btn btn-info" type="button" id="btn-submit">
+            <i class="ace-icon fa fa-check bigger-110"></i>
+            @if (displayInfo.LE_ID > 0)
+            {
+                <text>保存</text>
+            }
+            else
+            { <text>新增</text>}
+        </button>
+        &nbsp; &nbsp; &nbsp;
+        <button class="btn closeDialog" type="button">
+            <i class="ace-icon fa fa-undo bigger-110"></i>
+            关闭
+        </button>
+    </div>
+</div>

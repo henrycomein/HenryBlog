@@ -1,0 +1,72 @@
+﻿@{
+    ViewBag.Title = "About";
+}
+
+@model Henry.Entity.AboutMe
+@section css{
+    <link href="~/Scripts/editor/css/froala_editor.min.css" rel="stylesheet" />
+    <link href="~/Scripts/editor/css/froala_style.min.css" rel="stylesheet" />
+    <link href="~/Scripts/iCheck/skins/flat/red.css" rel="stylesheet" />
+}
+@section scripts{
+
+    <script src="~/Scripts/editor/js/froala_editor.min.js"></script>
+    <!--[if lt IE 9]>
+        <script src="~/Scripts/editor/js/froala_editor_ie8.min.js"></script>
+    <![endif]-->
+    <script src="~/Scripts/editor/js/langs/zh_cn.js"></script>
+
+    <script src="~/Scripts/iCheck/icheck.min.js"></script>
+    <script src="~/Scripts/jquery.blockUI.js"></script>
+
+    <script type="text/javascript">
+        $(function () {
+            $("#about-content").editable({
+                inlineMode: false,
+                width: 700,
+                theme: 'gray',
+                height: 300
+            });
+            $('.about-cbox').iCheck({
+                checkboxClass: 'icheckbox_flat-red top6px',
+                radioClass: 'iradio_flat-red'
+            });
+            $('#about-status').iCheck('@(Model.A_Status == 1 ? "check" : "uncheck")');
+
+            $("#btn-submit").click(function () {
+                var postContent = {};
+                postContent.A_ID = '@Model.A_ID';
+                    postContent.A_Content = $("#about-content").editable('getHTML', true, true);
+                    postContent.A_Status = $("#about-status").prop("checked") ? 1 : 0;
+                    tools.postData($("#about-data").attr("action"), postContent, function (data) {
+                        alert(data.message);
+                    }, "#about-data");
+            });
+        });
+    </script>
+}
+<div class="col-xs-12 margint20">
+    <form class="form-horizontal" id="about-data" action="{dns}api/aboutme/update" method="post">
+        <div class="form-group">
+            <label class="col-sm-2 control-label no-padding-right" for="about-content">內容 </label>
+            <div class="col-sm-10">
+                <textarea id="about-content" placeholder="內容" class="col-sm-10">@Html.Raw(Model.A_Content)</textarea>
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="col-sm-2 control-label no-padding-right" for="about-status">有效 </label>
+            <div class="col-sm-10 ">
+                <input class="about-cbox " id="about-status" type="checkbox" />
+            </div>
+        </div>
+    </form>
+</div>
+<div class="clearfix form-actions fixed-bottom col-xs-12 ">
+    <div class=" col-md-12" style="text-align: center;">
+        <button class="btn btn-info" type="button" id="btn-submit">
+            <i class="ace-icon fa fa-check bigger-110"></i>
+            保存
+        </button>
+
+    </div>
+</div>

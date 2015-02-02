@@ -1,0 +1,51 @@
+﻿@{
+    ViewBag.Title = "PhotoCategoryList";
+    var basicVisiteUrl = Henry.Common.SettingHelper.PhotoVisitePath();
+}
+@model List<Henry.Entity.PhotoCategory>
+@section scripts{
+    <script src="~/Scripts/jquery.blockUI.js"></script>
+    <script src="~/Scripts/jquery.pagination.js"></script>
+    <script src="~/Scripts/lhgdialog/lhgdialog.min.js?skin=jtop"></script>
+    <script src="~/Scripts/lhgdialog/lhgdialogPlus.js"></script>
+    <script type="text/javascript">
+            
+
+    </script>    
+}
+<div class="page-header">
+    <h1>
+        相册管理
+		<small>
+            <i class="ace-icon fa fa-angle-double-right"></i>
+        </small>
+         <button class="btn btn-info" type="button" title="新增" data-rel="popup" data-content="url:{dns}business/photocategory"  data-width="560px"  data-height="350px" data-title="新增">
+            <i class="ace-icon fa fa-plus bigger150" ></i>新增
+        </button>
+    </h1>
+</div>
+<div class="center col-xs-12" style="margin:0 auto;">
+    <ul class="ace-thumbnails clearfix center col-xs-12">
+        @foreach(var d in Model)
+        {
+            <li>
+                <a href="@(Url.Content("~/business/photolist/"+d.PC_ID))"  class="cboxElement">
+                    <img width="240" height="200"  src="@string.Concat(basicVisiteUrl,d.PC_CoverPhotoFileName)" />
+                    <div class="text">
+                        <div class="inner">@d.PC_Desc</div>
+                    </div>
+                    <div class="center">@d.PC_Name</div>
+                </a>
+                
+                <div class="tools tools-bottom" >
+                    <a href="#" data-rel="popup" data-content="url:{dns}business/photocategory/@d.PC_ID" data-width="560px" data-height="350px" data-title="编辑">
+                        <i class="ace-icon fa fa-pencil"></i>
+                    </a>
+                    <a href="#" data-rel="delete" data-category="photocategory" data-id="@d.PC_ID">
+                        <i class="ace-icon fa fa-times red"></i>
+                    </a>
+                </div>
+            </li>
+        }
+    </ul>
+</div>

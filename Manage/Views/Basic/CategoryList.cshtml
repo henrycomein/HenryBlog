@@ -1,0 +1,65 @@
+﻿@{
+    ViewBag.Title = "类别列表";
+}
+@section css{
+    <link href="~/Scripts/jqtreegrid/css/jquery.treegrid.css" rel="stylesheet" />
+}
+@section scripts{
+    <script src="~/Scripts/jquery.blockUI.js"></script>
+    <script src="~/Scripts/jqtreegrid/jquery.treegrid.js"></script>
+    <script src="~/Scripts/lhgdialog/lhgdialog.min.js?skin=jtop"></script>
+    <script src="~/Scripts/lhgdialog/lhgdialogPlus.js"></script>
+    <script type="text/javascript">
+        $(function () {
+            (function() {
+                tools.postData('{dns}category/list', null, function (data) {
+                    var htmlArray = [];
+                    if (data.total > 0) {
+                        $.each(data.items, function (i, item) {
+                            htmlArray.push('<tr class="treegrid-' + item.id + (item.pid > 0 ? ' treegrid-parent-' + item.pid : '') + '">');
+                            htmlArray.push('<td >' + item.name + '</td>');
+                            htmlArray.push('<td class="center">' + item.sort + '</td>');
+                            htmlArray.push('<td class="center">' + (item.show ? ' <i class="green fa fa-check-circle bigger-130" title="是"></i>' : '<i class="orange fa fa-minus-circle bigger-130" title="否"></i>') + '</td>');
+                            htmlArray.push('<td class="center">' + (item.status ? '<i class="green fa fa-check-circle bigger-130" title="有效"></i>' : '<i class="red fa fa-times-circle bigger-130" title="无效"></i>') + '</td>');
+                            htmlArray.push('<td><div class="center action-buttons">');
+                            htmlArray.push('<a class="green" data-rel="popup" data-title="编辑" data-width="600px" data-height="560px" data-content="url:{dns}Basic/Category/' + item.id + '" href="javascript:;" title="编辑"  ><i class="ace-icon fa fa-pencil bigger-130"></i></a>&nbsp;<a class="red" href="javascript:;" data-rel="delete" title="删除" data-category="category" data-id="' + item.id + '"  data-content="确定删除吗？"><i class="ace-icon fa fa-trash-o bigger-130"></i></a>');
+                            htmlArray.push('</div></td>')
+                            htmlArray.push('</tr>');
+                        });
+                    }
+                    else {
+                        htmlArray.push('<tr><td colspan="5" class="center">No Data Found!</td></tr>');
+                    }
+                    $("#category-table tbody").append(htmlArray.join(''));
+                    $("#category-table").treegrid().treegrid('collapseAll');
+               }, '#category-table');
+            })();
+            
+        });
+    </script>
+}
+<div class="page-header">
+    <h1>
+        类别列表
+        <small>
+            <i class="ace-icon fa fa-angle-double-right"></i>
+        </small>
+    </h1>
+</div>
+<div class="col-xs-12">
+   <table id="category-table"  class="col-xs-12 table-bordered treegrid-table" role="grid" aria-describedby="dynamic-table_info">
+        <thead>
+            <tr>
+                <th class="center col-xs-7">类别名称</th>
+                <th class="center col-xs-1">排序</th>
+                <th class="center col-xs-2">是否前台显示</th>
+                <th class="center col-xs-1">状态</th>
+                <th class="center col-xs-1">操作</th>
+            </tr>
+        </thead>
+        <tbody>
+
+         </tbody>
+    </table>
+
+</div>

@@ -1,0 +1,15 @@
+﻿@{
+    ViewBag.Title = "ArticleDetail";
+}
+@model Henry.Entity.Article
+<div class="newcontainer" id="page_course_learn">
+    <div class="course_nav clearfix">
+        <div class="blog-title mgbottom10" id="page_header">
+            <a href="/blog/article/list/@(Model.A_CategoryID).html" class="back-btn">&lt;</a>
+            <h1>@Model.A_Title</h1>
+        </div>
+    </div>
+    <div class="article-content">
+        @Model.A_Content
+    </div>
+</div>

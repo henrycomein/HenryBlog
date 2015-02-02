@@ -1,0 +1,59 @@
+﻿@{
+    ViewBag.Title = "TagSelect";
+    Layout = "~/Views/Shared/_Child.cshtml";
+    var selectedID = (int)ViewBag.ID;
+    var selectedTag = new Henry.Entity.Tag();
+    if(selectedID>0){
+        selectedTag = Model.FirstOrDefault(i => i.T_ID == selectedID);
+    }
+}
+@model List<Henry.Entity.Tag>
+@section scripts{
+    <script src="~/Scripts/ztree/js/jquery.ztree.all-3.5.min.js"></script>
+    <script src="~/Scripts/jquery.blockUI.js"></script>
+    <script src="~/Scripts/lhgdialog/lhgdialogPlus.js"></script>
+    <script type="text/javascript">
+        var selectedItem = null
+        $(function () {
+            if(@selectedID>0){
+                selectedItem = { id: '@selectedTag.T_ID', text:  '@selectedTag.T_Name' };
+            }
+            $('[data-flag="tag"]').click(function () {
+                if (!$(this).hasClass("badge-select")) {
+                    selectedItem = { id: $(this).attr("data-val"), text: $(this).html() };
+                    $(".badge").removeClass("badge-select");
+                    $(this).addClass("badge-select");
+                }
+                return false;
+            });
+            $("#btn-select").click(function () {
+                if (selectedItem == null) {
+                    winAlert("请选择标签！", true, false, false);
+                }
+                else {
+                    api.get(api.data.pid).setTag(selectedItem.text, selectedItem.id);
+                    api.close();
+                }
+            });
+        });
+    </script>
+}
+<div id="baseContainer" class="col-xs-12 margint20" style="margin-bottom: 3px;">
+    @foreach (var i in Model)
+    { 
+        if(i.T_ID==selectedID){
+            <span class="badge badge-grey badge-hover badge-select" data-flag="tag" data-val="@i.T_ID">@i.T_Name</span>
+        }
+        else{
+            <span class="badge badge-grey badge-hover" data-flag="tag" data-val="@i.T_ID">@i.T_Name</span>
+        }
+    }
+</div>
+<div class="clearfix form-actions col-xs-12 fixed-bottom padding5">
+    <div class=" col-md-12 center">
+        <button class="btn btn-info badge" type="button" id="btn-select">
+            <i class="ace-icon fa fa-check bigger-110"></i>
+            选择
+        </button>
+    </div>
+</div>

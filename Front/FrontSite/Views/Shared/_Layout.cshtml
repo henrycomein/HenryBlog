@@ -1,0 +1,51 @@
+﻿<!DOCTYPE html>
+<html lang="zh">
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <meta charset="utf-8" />
+    <title>@ViewBag.Title - 我的 主页</title>
+    <link href="~/favicon.ico" rel="shortcut icon" type="image/x-icon" />
+    <meta name="viewport" content="width=device-width" />
+    @Styles.Render("~/Content/css")
+    @RenderSection("css",false)
+    @Scripts.Render("~/bundles/modernizr")
+</head>
+<body>
+    <div class="s-skin-container" id="s-skin" style=""></div>
+    <div class="navbar-transparency"></div>
+    <div id="header">
+        <div class="page-container" id="nav">
+            <div id="logo" class="logo" style="display:none"><a href="/" target="_self" class="hide-text">飞戈的博客</a></div>
+            <ul class="nav-item l">
+                <li class="active"><a href="/">首页</a></li>
+                @Html.Action("_NavCategory", "Home")
+                <li><a href="/photo.html">照片墙</a></li>
+                <li><a href="/event.html">历史事件</a></li>
+                <li><a href="/about.html">关于我</a></li>
+            </ul>
+            <div class="search-area">
+                <form action="/index/search" name="search-form" method="get">
+                    <input class="js-input-keyword search-input" placeholder="搜索关键字" type="text" autocomplete="off" name="words" value="">
+                    <input type="button" class="btn_search js-btn-search">
+                    <dl class="search-area-result" style="display: none;"></dl>
+                </form>
+            </div>
+        </div>
+    </div>
+    <div class="main">
+        @RenderBody()
+    </div>
+    <div id="gotoTop" class="elevator">
+        <a class="elevator-top" href="javascript:;" style="display: none;" id="backTop"></a>
+    </div>
+    @Scripts.Render("~/bundles/jquery")
+    
+    <script src="~/Scripts/common.js"></script>
+    <script type="text/javascript">
+        $(function () {
+            tools.initBackgroundHeight();
+        });
+    </script>
+    @RenderSection("scripts", required: false)
+</body>
+</html>

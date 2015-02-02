@@ -1,0 +1,83 @@
+﻿@{
+    ViewBag.Title = "Photo";
+}
+@section css{
+    <link href="~/Scripts/jBox/Source/jBox.css" rel="stylesheet" />
+}
+@model List<Henry.Entity.PhotoCategory>
+@section scripts{
+    <script src="~/Scripts/jBox/Source/jBox.min.js"></script>
+    <script type="text/javascript">
+        $(function () {
+            var dialog = function (keyid) {
+                return tools.initPasswordModel('{dns}valicate/checkphotopassword', { id: keyid });
+            };
+            $('[data-require-password="1"]').click(function () {
+                dialog($(this).attr("data-id")).open();
+                return false;
+            });
+        });
+         
+    </script>
+}
+<div class="main-container">
+    <div class="blog-content photo-content">
+        <div class="photo-tools">
+            <h2>全部<span><strong id="article-total">(@Model.Count)</strong></span></h2>
+        </div>
+        <div class="photo-list" style="margin-top: 0px;">
+            <div class="js-blog-list">
+                <ul id="category-content" data-load-complete="0">
+                    @foreach (var i in Model)
+                    {
+                        if (i.PC_NeedPassword == 1)
+                        { 
+                        <li>
+                            <a href="javascript:;" data-require-password="1" data-id="@i.PC_ID">
+                                <div class="photo-list-img height280">
+                                    <img src="~/Images/lock.jpg" />
+                                </div>
+                                <h5><span>@i.PC_Name</span></h5>
+                                <div class="intro top280">
+                                    <p>@i.PC_Desc</p>
+                                    <span class="l"></span>
+                                    <span class="r">输入密码查看</span>
+                                </div>
+                                <div class="tips">创建于@(i.PC_CreateTime)<span class="r">0人看过</span></div>
+                            </a>
+                        </li>
+                        }
+                        else
+                        { 
+                        <li>
+                            <a href="@Url.Content("~/photoview/" + i.PC_ID)">
+                                <div class="photo-list-img height280">
+                                    @if (string.IsNullOrEmpty(i.PC_CoverPhotoFileName))
+                                    {
+                                        <text>没有预览图片</text>
+                                    }
+                                    else
+                                    {
+                                        <img width="280" height="280" alt="@i.PC_Name" src="@i.PC_CoverPhotoFileName">
+                                    }
+                                </div>
+                                <h5><span>@i.PC_Name</span></h5>
+                                <div class="intro top280">
+                                    <p>@i.PC_Desc</p>
+                                    <span class="l"></span>
+                                    <span class="r">共有照片 0 张</span>
+                                </div>
+                                <div class="tips">创建于@(i.PC_CreateTime)<span class="r">0人看过</span></div>
+                            </a>
+                        </li>
+                        }
+                    }
+                </ul>
+            </div>
+            <a href="javascript:void(0)" class="js-next btn-next btn-loading" id="btn-loading" style="display: none;"></a>
+        </div>
+    </div>
+
+
+
+</div>

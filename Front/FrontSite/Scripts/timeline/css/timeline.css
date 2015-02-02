@@ -1,0 +1,196 @@
+﻿
+.row {/*113*/
+    width: 100%;
+}
+a {/*341*/
+    color: #1695A4;
+    text-decoration: none;
+}
+.column {/*1239*/
+    float: left;
+    /*padding: 9px;*/
+}
+.column.c9 {/*1267*/
+    width: 711px;
+}
+.content_box {/*2114*/
+    padding: 9px;
+}
+.pad {/*2209*/
+    padding: 9px;
+}
+.image, .image img, .scrollable img {/*2307*/
+    font-size: 0;
+}
+.image {/*2310*/
+    float: left;
+    font-size: 0;
+    margin-right: 18px;
+}
+.timeline_container {/*4281*/
+    overflow: hidden;
+    position: relative;
+}
+#timeline {/*4285*/
+    background: url("../images/layout/bg_timeline_dots.gif") repeat-x scroll left 86px rgba(0, 0, 0, 0);
+    height: 370px;
+    margin: 0 auto;
+    overflow: hidden;
+    padding-top: 30px;
+    width: 692px;
+}
+#dates {/*4293*/
+    height: 65px;
+    margin-bottom: 15px;
+    overflow: hidden;
+    width: 692px;
+}
+#dates li {/*4299*/
+    background: url("../images/layout/bg_timeline_lrg_dot.gif") no-repeat scroll center bottom rgba(0, 0, 0, 0);
+    float: left;
+    font-size: 1.6em;
+    height: 60px;
+    list-style: none outside none;
+    text-align: center;
+    width: 100px;
+}
+#dates a {/*4308*/
+    color: #666666;
+    display: block;
+    outline: medium none;
+    padding: 10px 0 0;
+}
+#dates .selected {/*4314*/
+    color: #000000;
+    font-size: 1.3em;
+    padding: 5px 0 0;
+}
+#timeline #next, #timeline #prev {/*4324*/
+    bottom: 0;
+    display: block;
+    height: 298px;
+    outline: medium none;
+    position: absolute;
+    width: 55px;
+}
+
+#timeline #next {/*4332*/
+    background: url("../images/layout/arrows_history_next.png") no-repeat scroll right 0 rgba(0, 0, 0, 0);
+    right: 0;
+}
+#timeline #prev {/*4336*/
+    background: url("../images/layout/arrows_history_next.png") no-repeat scroll left -298px rgba(0, 0, 0, 0);
+    left: 0;
+}
+#timeline #next:hover {/*4340*/
+    background-position: right bottom;
+}
+#timeline #prev:hover {/*4343*/
+    background-position: left bottom;
+}
+#issues {/*4346*/
+    height: 290px;
+    overflow: hidden;
+    width: 692px;
+}
+#issues div.year_content {/*4351*/
+    float: left;
+    height: 290px;
+    overflow: hidden;
+    width: 692px;
+}
+.content_box.inner_glow {/*4360*/
+    background: url("../images/layout/bg_inner_glow.jpg") repeat scroll center top #EEEEEE;
+    border: 1px solid #DDDDDD;
+    border-radius: 3px 3px 0 0;
+    /*margin-top: 10px;*/
+    padding: 8px;
+}
+.scroll_content .image {/*4367*/
+    background: url("../../images/layout/product_shadow.png") no-repeat scroll 50px 180px rgba(0, 0, 0, 0);
+    float: left;
+    height: 248px;
+    margin: 0;
+    padding: 20px 9px 0 48px;
+    text-align: center;
+    width: 274px;
+    overflow: hidden;
+}
+.scroll_content .text {/*4376*/
+    float: left;
+    height: 268px;
+    padding: 20px 0 0 9px;
+    width: 260px;
+}
+.scroll_content .text p {/*4382*/
+    color: #666666;
+    margin: 0 0 1em;
+    padding: 0;
+}
+.year_content .pad {/*4387*/
+    height: 272px;
+    overflow: auto;
+    width: 620px;
+}
+.year_content .pad {/*4387*/
+    height: 272px;
+    overflow: auto;
+    width: 620px;
+}
+.year_content .pad {/*4403*/
+    overflow: hidden;
+    position: relative;
+}
+.no_js .year_content .pad {/*4407*/
+    overflow: auto;
+}
+.year_content .scroll_content {/*4410*/
+    position: absolute;
+}
+.controls {/*4413*/
+    bottom: 10px;
+    position: absolute;
+    right: 9px;
+    z-index: 3;
+}
+.controls ul {/*4419*/
+    list-style: none outside none;
+    margin: 0;
+    padding: 0;
+}
+.controls li {/*4424*/
+    display: inline-block;
+    float: none;
+    margin: 0 5px 0 0;
+    padding: 0;
+}
+* + html .controls li {/*4430*/
+    display: inline;
+}
+.controls a.vPrev, .controls a.vNext {/*4433*/
+    display: block;
+    height: 35px;
+    width: 35px;
+}
+.controls a.vPrev {/*4438*/
+    background: url("../images/layout/vertical_prev.png") no-repeat scroll 0 0 rgba(0, 0, 0, 0);
+}
+.controls a.vNext {/*4441*/
+    background: url("../images/layout/vertical_next.png") no-repeat scroll 0 0 rgba(0, 0, 0, 0);
+}
+.controls a.vPrev:hover, .controls a.vNext:hover {/*4444*/
+    background-position: 0 -36px;
+}
+.controls a.vPrev.disabled, .controls a.vNext.disabled, .controls a.vPrev.disabled:hover, .controls a.vNext.disabled:hover {/*4447*/
+    background-position: 0 -72px;
+}
+.slider .next, .slider .prev, #timeline #next span, #timeline #prev span, .controls a span {/*5461*/
+    display: none;
+}
+.row:after, .pad:after, .content_box:after, .items:after, .item:after, .slider .mask:after, .richtext:after {/*5477*/
+    clear: both;
+    content: ".";
+    display: block;
+    height: 0;
+    visibility: hidden;
+}

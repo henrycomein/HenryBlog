@@ -1,0 +1,15 @@
+﻿@{
+    ViewBag.Title = "Index";
+}
+@section scripts{
+<script type="text/javascript">
+        $(function () {
+            var pics = '@ViewBag.BGImageList'.split(',');
+            var randomNumber = tools.getRandomNumber(pics.length - 1);
+            $("#s-skin").css("backgroundImage", "url('/images/bg/" + pics[randomNumber] + "')");
+        })
+</script>    
+}
+<div>
+
+</div>
